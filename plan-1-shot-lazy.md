@@ -28,7 +28,6 @@ dependency). ESLint flat config (template default) + `eslint-config-prettier` + 
 `lint`, `format`, `typecheck`.
 
 **Folder layout**:
-
 ```
 src/
   types/models.ts              # Construct, Feature, Mutation, ProteinEffect (PRD §22 + minor additive fields)
@@ -43,7 +42,6 @@ src/
   views/{Sequence,Map,Protein,Mutations,Restriction,PCR,Compare,Assembly}View.tsx
   utils/id.ts format.ts
 ```
-
 Tests co-located (`sequence.test.ts` beside `sequence.ts`).
 
 **Coordinate convention**: internal computation is 0-based half-open `[start,end)`;
@@ -52,7 +50,6 @@ display components (`toDisplayPosition`/`fromDisplayPosition` in `sequence.ts`).
 this once is the main defense against off-by-one bugs throughout.
 
 **State**: two Zustand stores only.
-
 - `constructStore`: `constructs: Record<string, Construct>`, `activeConstructId`,
   `originalConstructId`, `compareConstructId`, `assembly.fragments`. Derived data
   (translation, ORFs, GC%, restriction sites) is **never stored** — computed via
@@ -159,7 +156,7 @@ so it's immediately viewable/comparable through every existing view.
   SmaI, EcoRV, PvuII, KpnI, SacI, ApaI, NsiI, PstI, plus **BsaI and BsmBI** (Type IIS,
   offset/non-symmetric cutters outside their recognition site — exercises the fragment
   math properly and ties into Golden-Gate-style assembly).
-- **Codon usage tables** for _E. coli_ K-12, _H. sapiens_, _S. cerevisiae_ in
+- **Codon usage tables** for *E. coli* K-12, *H. sapiens*, *S. cerevisiae* in
   `data/codonUsageTables.ts`. Real published frequency values (Kazusa CUTG or equivalent
   public table) will be looked up via WebFetch while building this module rather than
   hand-typed from memory; if a fetch is unavailable, fall back to well-established
