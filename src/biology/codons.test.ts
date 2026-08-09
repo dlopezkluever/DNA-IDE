@@ -3,7 +3,7 @@ import { optimizeCodons, compareCodonUsage } from './codons'
 import { translateDNA } from './translation'
 
 describe('optimizeCodons', () => {
-  it('replaces each codon with the organism\'s most frequent synonym (E. coli)', () => {
+  it("replaces each codon with the organism's most frequent synonym (E. coli)", () => {
     // CTA (Leu, 5.3/1000) and AAG (Lys, 12.1/1000) are not E. coli's preferred codons;
     // CTG (46.9/1000) and AAA (33.2/1000) are.
     const result = optimizeCodons('CTAAAG', 'ecoli')

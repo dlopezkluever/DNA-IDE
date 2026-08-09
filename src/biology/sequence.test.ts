@@ -184,7 +184,14 @@ describe('featureLength', () => {
   })
 
   it('sums segment lengths for a join()-style feature', () => {
-    const feature = { start: 15, end: 5, segments: [{ start: 15, end: 20 }, { start: 0, end: 5 }] }
+    const feature = {
+      start: 15,
+      end: 5,
+      segments: [
+        { start: 15, end: 20 },
+        { start: 0, end: 5 },
+      ],
+    }
     expect(featureLength(feature, seqLen)).toBe(10)
   })
 })

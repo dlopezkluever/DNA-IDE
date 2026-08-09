@@ -21,7 +21,10 @@ export function AssemblyView() {
   const addWholeConstruct = (id: string) => {
     const c = constructs[id]
     if (!c) return
-    setFragments((f) => [...f, { id: `${c.id}-${f.length}`, label: c.name, sequence: c.sequence, features: c.features }])
+    setFragments((f) => [
+      ...f,
+      { id: `${c.id}-${f.length}`, label: c.name, sequence: c.sequence, features: c.features },
+    ])
   }
 
   const addSelection = () => {
@@ -62,7 +65,9 @@ export function AssemblyView() {
           Add Fragment
         </h3>
         <div className="mb-3 space-y-1">
-          <label className="block font-mono text-[11px] text-(--color-text-muted)">From construct</label>
+          <label className="block font-mono text-[11px] text-(--color-text-muted)">
+            From construct
+          </label>
           <select
             value=""
             onChange={(e) => e.target.value && addWholeConstruct(e.target.value)}
@@ -95,7 +100,11 @@ export function AssemblyView() {
           className="mb-2 w-full rounded border border-(--color-border-strong) bg-(--color-bg-canvas) px-2 py-1 font-mono text-xs text-(--color-text-primary)"
         />
         <label className="mb-3 flex items-center gap-1.5 font-mono text-[11px] text-(--color-text-secondary)">
-          <input type="checkbox" checked={circularize} onChange={(e) => setCircularize(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={circularize}
+            onChange={(e) => setCircularize(e.target.checked)}
+          />
           Circularize
         </label>
         <button

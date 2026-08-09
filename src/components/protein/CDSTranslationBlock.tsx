@@ -47,7 +47,9 @@ export function CDSTranslationBlock({ feature, sequence }: CDSTranslationBlockPr
               title={`Codon ${i + 1}: ${codon.seq} -> ${codon.aa}`}
             >
               <span className="text-(--color-text-secondary)">{codon.seq}</span>
-              <span className={codon.aa === '*' ? 'text-(--color-danger)' : 'text-(--color-accent)'}>
+              <span
+                className={codon.aa === '*' ? 'text-(--color-danger)' : 'text-(--color-accent)'}
+              >
                 {codon.aa}
               </span>
             </button>

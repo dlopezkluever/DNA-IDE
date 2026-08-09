@@ -68,14 +68,17 @@ export function SequenceToolbar() {
         </button>
       </div>
 
-      {showRC && selectedSeq && explainMode && <ExplainBlock steps={explainReverseComplement(selectedSeq)} />}
+      {showRC && selectedSeq && explainMode && (
+        <ExplainBlock steps={explainReverseComplement(selectedSeq)} />
+      )}
       {showRC && selectedSeq && !explainMode && (
         <div className="rounded border border-(--color-border) bg-(--color-bg-canvas) px-2 py-1.5 font-mono text-xs">
           <div className="text-(--color-text-muted)">
             5' <span className="text-(--color-text-primary)">{selectedSeq}</span> 3'
           </div>
           <div className="text-(--color-text-muted)">
-            3' <span className="text-(--color-text-primary)">{reverseComplement(selectedSeq)}</span> 5'
+            3' <span className="text-(--color-text-primary)">{reverseComplement(selectedSeq)}</span>{' '}
+            5'
           </div>
         </div>
       )}

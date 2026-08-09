@@ -10,7 +10,10 @@ for (const [codon, aa] of Object.entries(STANDARD_CODON_TABLE)) {
 function mostFrequentCodonFor(aminoAcid: string, organism: OrganismId): string {
   const candidates = CODONS_BY_AMINO_ACID[aminoAcid] ?? []
   const table = CODON_USAGE[organism]
-  return candidates.reduce((best, codon) => ((table[codon] ?? 0) > (table[best] ?? 0) ? codon : best), candidates[0])
+  return candidates.reduce(
+    (best, codon) => ((table[codon] ?? 0) > (table[best] ?? 0) ? codon : best),
+    candidates[0],
+  )
 }
 
 export interface CodonChange {
@@ -56,7 +59,8 @@ export function optimizeCodons(cds: string, organism: OrganismId): OptimizeCodon
   return {
     originalDNA: cds,
     optimizedDNA,
-    proteinUnchanged: codons.map(translateCodon).join('') === optimizedCodons.map(translateCodon).join(''),
+    proteinUnchanged:
+      codons.map(translateCodon).join('') === optimizedCodons.map(translateCodon).join(''),
     changes,
     gcBefore: calculateGC(cds),
     gcAfter: calculateGC(optimizedDNA),

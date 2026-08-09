@@ -11,7 +11,10 @@ export function MapView() {
 
   if (!construct) {
     return (
-      <ViewPlaceholder title="No construct loaded" note="Import a FASTA or GenBank file to begin." />
+      <ViewPlaceholder
+        title="No construct loaded"
+        note="Import a FASTA or GenBank file to begin."
+      />
     )
   }
 

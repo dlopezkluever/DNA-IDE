@@ -7,13 +7,7 @@
 export type Topology = 'linear' | 'circular'
 
 export type FeatureType =
-  | 'gene'
-  | 'CDS'
-  | 'promoter'
-  | 'terminator'
-  | 'origin'
-  | 'regulatory'
-  | 'misc'
+  'gene' | 'CDS' | 'promoter' | 'terminator' | 'origin' | 'regulatory' | 'misc'
 
 export type Strand = 1 | -1
 

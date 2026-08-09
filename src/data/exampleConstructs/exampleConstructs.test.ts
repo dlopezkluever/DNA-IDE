@@ -31,10 +31,14 @@ describe('example constructs parse cleanly through the real GenBank parser', () 
   }
 
   it('the GFP construct CDS is 238 residues (matching real GFP length)', () => {
-    const { records } = parseGenBank(EXAMPLE_CONSTRUCTS.find((e) => e.id === 'gfp-construct')!.genbank)
+    const { records } = parseGenBank(
+      EXAMPLE_CONSTRUCTS.find((e) => e.id === 'gfp-construct')!.genbank,
+    )
     const construct = constructFromGenBank(records[0])
     const gfp = construct.features.find((f) => f.name === 'GFP')!
-    const protein = translateFeature(gfp, construct.sequence).map((c) => c.aa).join('')
+    const protein = translateFeature(gfp, construct.sequence)
+      .map((c) => c.aa)
+      .join('')
     expect(protein.length - 1).toBe(238) // exclude the trailing stop
   })
 
@@ -45,7 +49,11 @@ describe('example constructs parse cleanly through the real GenBank parser', () 
     const construct = constructFromGenBank(records[0])
     expect(construct.topology).toBe('circular')
 
-    const orfs = findORFs(construct.sequence, { topology: 'circular', minLength: 200, strands: [1] })
+    const orfs = findORFs(construct.sequence, {
+      topology: 'circular',
+      minLength: 200,
+      strands: [1],
+    })
     expect(orfs.length).toBeGreaterThanOrEqual(2)
   })
 })

@@ -8,7 +8,12 @@ export function ProteinView() {
   const construct = activeConstructId ? constructs[activeConstructId] : null
 
   if (!construct) {
-    return <ViewPlaceholder title="No construct loaded" note="Import a FASTA or GenBank file to begin." />
+    return (
+      <ViewPlaceholder
+        title="No construct loaded"
+        note="Import a FASTA or GenBank file to begin."
+      />
+    )
   }
 
   const cdsFeatures = construct.features.filter((f) => f.type === 'CDS')

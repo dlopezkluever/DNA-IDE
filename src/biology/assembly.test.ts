@@ -8,7 +8,12 @@ function feature(id: string, start: number, end: number): Feature {
 
 describe('assembleFragments', () => {
   it('returns a single fragment unchanged with no junctions', () => {
-    const frag: AssemblyFragment = { id: 'a', label: 'A', sequence: 'ACGTACGT', features: [feature('f', 0, 4)] }
+    const frag: AssemblyFragment = {
+      id: 'a',
+      label: 'A',
+      sequence: 'ACGTACGT',
+      features: [feature('f', 0, 4)],
+    }
     const result = assembleFragments([frag])
     expect(result.sequence).toBe('ACGTACGT')
     expect(result.junctions).toEqual([])
@@ -16,8 +21,18 @@ describe('assembleFragments', () => {
   })
 
   it('auto-detects a Gibson-style overlap and trims the duplicate once', () => {
-    const fragA: AssemblyFragment = { id: 'a', label: 'A', sequence: 'AAAAAAAAGGATCCTT', features: [] }
-    const fragB: AssemblyFragment = { id: 'b', label: 'B', sequence: 'GGATCCTTCCCCCCCC', features: [] }
+    const fragA: AssemblyFragment = {
+      id: 'a',
+      label: 'A',
+      sequence: 'AAAAAAAAGGATCCTT',
+      features: [],
+    }
+    const fragB: AssemblyFragment = {
+      id: 'b',
+      label: 'B',
+      sequence: 'GGATCCTTCCCCCCCC',
+      features: [],
+    }
     const result = assembleFragments([fragA, fragB])
     expect(result.junctions).toEqual([{ overlapLength: 8 }])
     expect(result.sequence).toBe('AAAAAAAAGGATCCTTCCCCCCCC') // overlap counted once
@@ -32,9 +47,19 @@ describe('assembleFragments', () => {
     expect(result.sequence).toBe('AAAATTTT')
   })
 
-  it('re-offsets a later fragment\'s features by the cumulative prior length', () => {
-    const fragA: AssemblyFragment = { id: 'a', label: 'A', sequence: 'AAAA', features: [feature('f1', 0, 4)] }
-    const fragB: AssemblyFragment = { id: 'b', label: 'B', sequence: 'TTTT', features: [feature('f2', 0, 4)] }
+  it("re-offsets a later fragment's features by the cumulative prior length", () => {
+    const fragA: AssemblyFragment = {
+      id: 'a',
+      label: 'A',
+      sequence: 'AAAA',
+      features: [feature('f1', 0, 4)],
+    }
+    const fragB: AssemblyFragment = {
+      id: 'b',
+      label: 'B',
+      sequence: 'TTTT',
+      features: [feature('f2', 0, 4)],
+    }
     const result = assembleFragments([fragA, fragB])
     expect(result.features).toEqual([
       { id: 'a:f1', type: 'misc', name: 'f1', start: 0, end: 4, strand: 1 },

@@ -1,5 +1,12 @@
 import { nanoid } from 'nanoid'
-import type { Construct, Feature, FeatureSegment, FeatureType, Strand, Topology } from '../types/models'
+import type {
+  Construct,
+  Feature,
+  FeatureSegment,
+  FeatureType,
+  Strand,
+  Topology,
+} from '../types/models'
 
 export interface GenBankRecord {
   name: string
@@ -209,7 +216,10 @@ function parseLocationString(rawInput: string): LocationResult {
 // ORIGIN section
 // ---------------------------------------------------------------------------
 
-function parseOriginSection(lines: string[], startIndex: number): { chars: string[]; nextIndex: number } {
+function parseOriginSection(
+  lines: string[],
+  startIndex: number,
+): { chars: string[]; nextIndex: number } {
   const chars: string[] = []
   let i = startIndex
   for (; i < lines.length; i++) {

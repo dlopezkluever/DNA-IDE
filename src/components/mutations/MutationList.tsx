@@ -15,7 +15,13 @@ const CONSEQUENCE_COLOR: Record<string, string> = {
   'in-frame-indel': 'text-(--color-warn)',
 }
 
-function MutationDetail({ mutation, featureName }: { mutation: Mutation; featureName: string | null }) {
+function MutationDetail({
+  mutation,
+  featureName,
+}: {
+  mutation: Mutation
+  featureName: string | null
+}) {
   const effect = mutation.proteinEffect
   const proteinChange = formatProteinChange(mutation)
 
@@ -23,7 +29,8 @@ function MutationDetail({ mutation, featureName }: { mutation: Mutation; feature
     <div className="space-y-1 border-t border-(--color-border) bg-(--color-bg-canvas) px-3 py-2 font-mono text-xs">
       <div className="text-(--color-text-muted)">Mutation</div>
       <div>
-        Position: <span className="text-(--color-text-primary)">{toDisplayPosition(mutation.position)}</span>
+        Position:{' '}
+        <span className="text-(--color-text-primary)">{toDisplayPosition(mutation.position)}</span>
       </div>
       <div>
         DNA: <span className="text-(--color-text-primary)">{formatDNAChange(mutation)}</span>
@@ -98,7 +105,9 @@ export function MutationList() {
               <span className="w-14 shrink-0 text-(--color-text-muted)">
                 {toDisplayPosition(m.position)}
               </span>
-              <span className="w-24 shrink-0 text-(--color-text-secondary)">{formatDNAChange(m)}</span>
+              <span className="w-24 shrink-0 text-(--color-text-secondary)">
+                {formatDNAChange(m)}
+              </span>
               {m.proteinEffect && (
                 <span className={CONSEQUENCE_COLOR[m.proteinEffect.consequence] ?? ''}>
                   {consequenceLabel(m.proteinEffect.consequence)}

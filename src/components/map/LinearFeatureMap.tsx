@@ -108,11 +108,7 @@ export function LinearFeatureMap({ sequenceLength, features }: LinearFeatureMapP
           const isActive = feature.id === activeFeatureId
 
           return (
-            <g
-              key={feature.id}
-              onClick={() => selectFeature(feature)}
-              className="cursor-pointer"
-            >
+            <g key={feature.id} onClick={() => selectFeature(feature)} className="cursor-pointer">
               {pieces.map((piece, i) => {
                 const x = xOf(piece.start)
                 const w = Math.max(1, xOf(piece.end) - xOf(piece.start))

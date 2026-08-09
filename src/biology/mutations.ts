@@ -1,5 +1,12 @@
 import { nanoid } from 'nanoid'
-import type { Construct, Feature, FeatureSegment, Mutation, MutationType, ProteinEffect } from '../types/models'
+import type {
+  Construct,
+  Feature,
+  FeatureSegment,
+  Mutation,
+  MutationType,
+  ProteinEffect,
+} from '../types/models'
 import { getFeaturePieces, reverseComplement } from './sequence'
 import { isStartCodon, translateCodon, translateDNA } from './translation'
 
@@ -24,7 +31,8 @@ export interface ApplyMutationResult {
 
 function shiftRange(range: { start: number; end: number }, position: number, deltaLength: number) {
   if (range.end <= position) return range
-  if (range.start >= position) return { start: range.start + deltaLength, end: range.end + deltaLength }
+  if (range.start >= position)
+    return { start: range.start + deltaLength, end: range.end + deltaLength }
   return { start: range.start, end: range.end + deltaLength }
 }
 
@@ -45,11 +53,20 @@ function shiftFeature(feature: Feature, position: number, deltaLength: number): 
   return { ...feature, start, end }
 }
 
-export function shiftFeatureCoordinates(features: Feature[], position: number, deltaLength: number): Feature[] {
+export function shiftFeatureCoordinates(
+  features: Feature[],
+  position: number,
+  deltaLength: number,
+): Feature[] {
   return features.map((f) => shiftFeature(f, position, deltaLength))
 }
 
-function featureOverlapsEdit(feature: Feature, editStart: number, editEnd: number, seqLen: number): boolean {
+function featureOverlapsEdit(
+  feature: Feature,
+  editStart: number,
+  editEnd: number,
+  seqLen: number,
+): boolean {
   return getFeaturePieces(feature, seqLen).some((p) => editStart < p.end && p.start < editEnd)
 }
 
@@ -57,14 +74,20 @@ function featureOverlapsEdit(feature: Feature, editStart: number, editEnd: numbe
 function extractReadingSequence(feature: Feature, seq: string): string {
   const pieces = getFeaturePieces(feature, seq.length)
   const plusStrandParts = pieces.map((p) => seq.slice(p.start, p.end))
-  return feature.strand === 1 ? plusStrandParts.join('') : plusStrandParts.map(reverseComplement).reverse().join('')
+  return feature.strand === 1
+    ? plusStrandParts.join('')
+    : plusStrandParts.map(reverseComplement).reverse().join('')
 }
 
 /**
  * 0-based offset of `position` within the feature's reading-direction sequence
  * (as produced by extractReadingSequence), or null if position falls outside the feature.
  */
-function readingRelativePosition(feature: Feature, position: number, seqLen: number): number | null {
+function readingRelativePosition(
+  feature: Feature,
+  position: number,
+  seqLen: number,
+): number | null {
   const pieces = getFeaturePieces(feature, seqLen)
   if (feature.strand === 1) {
     let offset = 0
@@ -97,7 +120,8 @@ export function classifyMutation(
   }
 
   const cdsBefore = extractReadingSequence(cdsFeature, seqBefore)
-  const shiftedFeature = deltaLength === 0 ? cdsFeature : shiftFeature(cdsFeature, edit.position, deltaLength)
+  const shiftedFeature =
+    deltaLength === 0 ? cdsFeature : shiftFeature(cdsFeature, edit.position, deltaLength)
   const cdsAfter = extractReadingSequence(shiftedFeature, seqAfter)
 
   if (deltaLength !== 0) {
@@ -157,7 +181,8 @@ export function applyMutation(construct: Construct, input: MutationInput): Apply
     )
   }
 
-  const seqAfter = seqBefore.slice(0, position) + alternate + seqBefore.slice(position + reference.length)
+  const seqAfter =
+    seqBefore.slice(0, position) + alternate + seqBefore.slice(position + reference.length)
   const deltaLength = alternate.length - reference.length
   const editEnd = position + reference.length
 

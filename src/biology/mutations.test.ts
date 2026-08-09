@@ -64,7 +64,11 @@ describe('classifyMutation: plus-strand substitutions (CDS ATG GAA TTT TGA)', ()
 
   it('synonymous: TTT -> TTC (Phe -> Phe)', () => {
     const seqAfter = seqBefore.slice(0, 11) + 'C' + seqBefore.slice(12)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 11, reference: 'T', alternate: 'C' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 11,
+      reference: 'T',
+      alternate: 'C',
+    })
     expect(effect).toEqual({
       consequence: 'synonymous',
       codonBefore: 'TTT',
@@ -77,7 +81,11 @@ describe('classifyMutation: plus-strand substitutions (CDS ATG GAA TTT TGA)', ()
 
   it('missense: TTT -> GTT (Phe -> Val)', () => {
     const seqAfter = seqBefore.slice(0, 9) + 'G' + seqBefore.slice(10)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 9, reference: 'T', alternate: 'G' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 9,
+      reference: 'T',
+      alternate: 'G',
+    })
     expect(effect).toEqual({
       consequence: 'missense',
       codonBefore: 'TTT',
@@ -90,7 +98,11 @@ describe('classifyMutation: plus-strand substitutions (CDS ATG GAA TTT TGA)', ()
 
   it('nonsense: GAA -> TAA (Glu -> Stop)', () => {
     const seqAfter = seqBefore.slice(0, 6) + 'T' + seqBefore.slice(7)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 6, reference: 'G', alternate: 'T' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 6,
+      reference: 'G',
+      alternate: 'T',
+    })
     expect(effect).toEqual({
       consequence: 'nonsense',
       codonBefore: 'GAA',
@@ -103,7 +115,11 @@ describe('classifyMutation: plus-strand substitutions (CDS ATG GAA TTT TGA)', ()
 
   it('start-loss: ATG -> GTG (Met -> Val at position 1)', () => {
     const seqAfter = seqBefore.slice(0, 3) + 'G' + seqBefore.slice(4)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 3, reference: 'A', alternate: 'G' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 3,
+      reference: 'A',
+      alternate: 'G',
+    })
     expect(effect).toEqual({
       consequence: 'start-loss',
       codonBefore: 'ATG',
@@ -116,7 +132,11 @@ describe('classifyMutation: plus-strand substitutions (CDS ATG GAA TTT TGA)', ()
 
   it('stop-loss: TGA -> GGA (Stop -> Gly)', () => {
     const seqAfter = seqBefore.slice(0, 12) + 'G' + seqBefore.slice(13)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 12, reference: 'T', alternate: 'G' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 12,
+      reference: 'T',
+      alternate: 'G',
+    })
     expect(effect).toEqual({
       consequence: 'stop-loss',
       codonBefore: 'TGA',
@@ -129,7 +149,11 @@ describe('classifyMutation: plus-strand substitutions (CDS ATG GAA TTT TGA)', ()
 
   it('a mutation position outside the given feature is noncoding', () => {
     const seqAfter = 'G' + seqBefore.slice(1)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 0, reference: 'A', alternate: 'G' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 0,
+      reference: 'A',
+      alternate: 'G',
+    })
     expect(effect).toEqual({ consequence: 'noncoding' })
   })
 })
@@ -141,7 +165,11 @@ describe('classifyMutation: indels', () => {
 
   it('a 1bp insertion causes a frameshift', () => {
     const seqAfter = seqBefore.slice(0, 6) + 'A' + seqBefore.slice(6)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 6, reference: '', alternate: 'A' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 6,
+      reference: '',
+      alternate: 'A',
+    })
     expect(effect.consequence).toBe('frameshift')
   })
 
@@ -158,7 +186,11 @@ describe('classifyMutation: indels', () => {
   it('a 3bp in-frame insertion between codons adds a residue without disturbing start/stop', () => {
     // insert "GGG" right after GAA (position 9): ATG GAA [GGG] TTT TGA -> M E G F *
     const seqAfter = seqBefore.slice(0, 9) + 'GGG' + seqBefore.slice(9)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 9, reference: '', alternate: 'GGG' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 9,
+      reference: '',
+      alternate: 'GGG',
+    })
     expect(effect.consequence).toBe('in-frame-indel')
   })
 
@@ -182,7 +214,11 @@ describe('classifyMutation: minus-strand CDS', () => {
     // position 11 is the plus-strand base whose complement is the first base of reading-codon 2 (GAA)
     expect(seqBefore[11]).toBe('C')
     const seqAfter = seqBefore.slice(0, 11) + 'A' + seqBefore.slice(12)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 11, reference: 'C', alternate: 'A' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 11,
+      reference: 'C',
+      alternate: 'A',
+    })
     expect(effect).toEqual({
       consequence: 'nonsense',
       codonBefore: 'GAA',
@@ -219,7 +255,11 @@ describe('classifyMutation: minus-strand spliced (complement(join(...))) CDS', (
     // indirectly through a start-loss mutation at the true 5' end of the reading sequence.
     expect(seqBefore[21]).toBe('T')
     const seqAfter = seqBefore.slice(0, 21) + 'C' + seqBefore.slice(22)
-    const effect = classifyMutation(feature, seqBefore, seqAfter, { position: 21, reference: 'T', alternate: 'C' })
+    const effect = classifyMutation(feature, seqBefore, seqAfter, {
+      position: 21,
+      reference: 'T',
+      alternate: 'C',
+    })
     expect(effect).toEqual({
       consequence: 'start-loss',
       codonBefore: 'ATG',
@@ -275,7 +315,12 @@ describe('applyMutation', () => {
   it('throws when the provided reference does not match the actual sequence', () => {
     const construct = buildConstruct()
     expect(() =>
-      applyMutation(construct, { type: 'substitution', position: 3, reference: 'G', alternate: 'C' }),
+      applyMutation(construct, {
+        type: 'substitution',
+        position: 3,
+        reference: 'G',
+        alternate: 'C',
+      }),
     ).toThrow(/Reference mismatch/)
   })
 

@@ -25,7 +25,9 @@ beforeEach(() => {
 describe('constructStore.applyMutation (fork-once model)', () => {
   it('forks a new "-edited" working copy on the first mutation, leaving the original untouched', () => {
     useConstructStore.getState().loadConstruct(makeConstruct())
-    useConstructStore.getState().applyMutation({ type: 'substitution', position: 3, reference: 'A', alternate: 'G' })
+    useConstructStore
+      .getState()
+      .applyMutation({ type: 'substitution', position: 3, reference: 'A', alternate: 'G' })
 
     const state = useConstructStore.getState()
     expect(state.originalConstructId).toBe('orig1')
@@ -36,8 +38,12 @@ describe('constructStore.applyMutation (fork-once model)', () => {
 
   it('applies subsequent mutations in place on the same working copy, without forking again', () => {
     useConstructStore.getState().loadConstruct(makeConstruct())
-    useConstructStore.getState().applyMutation({ type: 'substitution', position: 3, reference: 'A', alternate: 'G' })
-    useConstructStore.getState().applyMutation({ type: 'substitution', position: 4, reference: 'T', alternate: 'C' })
+    useConstructStore
+      .getState()
+      .applyMutation({ type: 'substitution', position: 3, reference: 'A', alternate: 'G' })
+    useConstructStore
+      .getState()
+      .applyMutation({ type: 'substitution', position: 4, reference: 'T', alternate: 'C' })
 
     const state = useConstructStore.getState()
     expect(state.activeConstructId).toBe('orig1-edited')
@@ -49,13 +55,17 @@ describe('constructStore.applyMutation (fork-once model)', () => {
 
   it('throws when there is no active construct', () => {
     expect(() =>
-      useConstructStore.getState().applyMutation({ type: 'substitution', position: 0, reference: 'A', alternate: 'G' }),
+      useConstructStore
+        .getState()
+        .applyMutation({ type: 'substitution', position: 0, reference: 'A', alternate: 'G' }),
     ).toThrow(/No active construct/)
   })
 
   it('loading a new construct resets the fork state', () => {
     useConstructStore.getState().loadConstruct(makeConstruct())
-    useConstructStore.getState().applyMutation({ type: 'substitution', position: 3, reference: 'A', alternate: 'G' })
+    useConstructStore
+      .getState()
+      .applyMutation({ type: 'substitution', position: 3, reference: 'A', alternate: 'G' })
     useConstructStore.getState().loadConstruct({ ...makeConstruct(), id: 'orig2' })
 
     const state = useConstructStore.getState()

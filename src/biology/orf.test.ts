@@ -9,7 +9,15 @@ describe('findORFs (linear)', () => {
   it('finds a simple forward-strand ORF', () => {
     const orfs = findORFs(seq, { minLength: 1, strands: [1] })
     expect(orfs).toEqual([
-      { start: 3, end: 15, strand: 1, frame: 0, length: 12, aminoAcidLength: 3, proteinSequence: 'MEF*' },
+      {
+        start: 3,
+        end: 15,
+        strand: 1,
+        frame: 0,
+        length: 12,
+        aminoAcidLength: 3,
+        proteinSequence: 'MEF*',
+      },
     ])
   })
 
@@ -48,7 +56,15 @@ describe('findORFs (circular)', () => {
   it('finds an ORF that spans the origin only when topology is circular', () => {
     const orfs = findORFs(seq, { topology: 'circular', minLength: 1, strands: [1] })
     expect(orfs).toEqual([
-      { start: 12, end: 6, strand: 1, frame: 0, length: 12, aminoAcidLength: 3, proteinSequence: 'MEF*' },
+      {
+        start: 12,
+        end: 6,
+        strand: 1,
+        frame: 0,
+        length: 12,
+        aminoAcidLength: 3,
+        proteinSequence: 'MEF*',
+      },
     ])
   })
 

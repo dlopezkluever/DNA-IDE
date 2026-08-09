@@ -19,16 +19,16 @@ The product should make DNA feel less like an opaque biological artifact and mor
 
 A user should be able to move fluidly between:
 
-* raw nucleotide sequence
-* annotated genetic features
-* protein translation
-* mutation consequences
-* restriction enzyme sites
-* primer design
-* PCR simulation
-* construct comparison
-* virtual plasmid assembly
-* codon optimization
+- raw nucleotide sequence
+- annotated genetic features
+- protein translation
+- mutation consequences
+- restriction enzyme sites
+- primer design
+- PCR simulation
+- construct comparison
+- virtual plasmid assembly
+- codon optimization
 
 The application is primarily educational and computational. It does **not** control laboratory equipment, order DNA, automate wet-lab execution, or provide workflows for modifying pathogenic organisms.
 
@@ -42,28 +42,28 @@ The purpose is to force the developer to understand the abstractions those tools
 
 By implementing the underlying logic, the developer should acquire practical familiarity with concepts including:
 
-* DNA sequences
-* nucleotides
-* strands and orientation
-* genes
-* coding sequences
-* open reading frames
-* promoters
-* terminators
-* plasmids
-* annotations
-* codons
-* amino acids
-* translation
-* mutations
-* restriction enzymes
-* primers
-* PCR
-* cloning
-* Gibson-style assembly concepts
-* codon usage
-* protein sequence changes
-* construct comparison
+- DNA sequences
+- nucleotides
+- strands and orientation
+- genes
+- coding sequences
+- open reading frames
+- promoters
+- terminators
+- plasmids
+- annotations
+- codons
+- amino acids
+- translation
+- mutations
+- restriction enzymes
+- primers
+- PCR
+- cloning
+- Gibson-style assembly concepts
+- codon usage
+- protein sequence changes
+- construct comparison
 
 The success criterion is therefore partly educational:
 
@@ -106,11 +106,11 @@ A software engineer or technically capable beginner learning molecular biology a
 
 The user:
 
-* understands programming
-* may have little wet-lab experience
-* wants biological intuition rather than memorized vocabulary
-* learns best by building and manipulating systems
-* wants to understand common genetic-engineering workflows
+- understands programming
+- may have little wet-lab experience
+- wants biological intuition rather than memorized vocabulary
+- learns best by building and manipulating systems
+- wants to understand common genetic-engineering workflows
 
 ## Secondary User
 
@@ -120,15 +120,15 @@ A biology student who wants an intuitive visual tool for understanding DNA const
 
 The initial product is not intended for:
 
-* clinical use
-* diagnostic interpretation
-* production laboratory management
-* automated DNA ordering
-* organism engineering workflows
-* pathogen engineering
-* human genome editing
-* regulatory submission
-* laboratory inventory management
+- clinical use
+- diagnostic interpretation
+- production laboratory management
+- automated DNA ordering
+- organism engineering workflows
+- pathogen engineering
+- human genome editing
+- regulatory submission
+- laboratory inventory management
 
 ---
 
@@ -155,13 +155,13 @@ The sequence editor highlights that region.
 
 A side panel displays:
 
-* nucleotide sequence
-* amino-acid translation
-* reading frame
-* strand orientation
-* length
-* start and stop codons
-* annotations
+- nucleotide sequence
+- amino-acid translation
+- reading frame
+- strand orientation
+- length
+- start and stop codons
+- annotations
 
 The user changes one nucleotide.
 
@@ -187,16 +187,16 @@ Do not hide important biological concepts behind buttons.
 
 For example, when translating DNA, show:
 
-* reading frame
-* codon boundaries
-* resulting amino acids
+- reading frame
+- codon boundaries
+- resulting amino acids
 
 When simulating PCR, show:
 
-* forward primer
-* reverse primer
-* their binding locations
-* expected amplicon
+- forward primer
+- reverse primer
+- their binding locations
+- expected amplicon
 
 ## 6.2 Every operation should teach something
 
@@ -219,12 +219,12 @@ Show:
 
 Users should be able to inspect a construct as:
 
-* raw DNA
-* annotated DNA
-* feature map
-* plasmid map
-* translated protein
-* sequence diff
+- raw DNA
+- annotated DNA
+- feature map
+- plasmid map
+- translated protein
+- sequence diff
 
 ## 6.4 Immediate feedback
 
@@ -252,32 +252,32 @@ Users can upload biological sequence files and create a construct.
 
 Parse:
 
-* sequence identifier
-* description
-* nucleotide sequence
+- sequence identifier
+- description
+- nucleotide sequence
 
 ### GenBank
 
 Parse:
 
-* sequence
-* locus information
-* annotations
-* feature locations
-* feature types
-* feature labels
-* strand orientation
-* CDS translation where available
+- sequence
+- locus information
+- annotations
+- feature locations
+- feature types
+- feature labels
+- strand orientation
+- CDS translation where available
 
 ## Requirements
 
 The system must:
 
-* accept `.fasta`, `.fa`, `.fna`, `.gb`, and `.gbk`
-* normalize DNA to uppercase
-* validate nucleotide characters
-* preserve annotations
-* identify circular versus linear constructs when metadata permits
+- accept `.fasta`, `.fa`, `.fna`, `.gb`, and `.gbk`
+- normalize DNA to uppercase
+- validate nucleotide characters
+- preserve annotations
+- identify circular versus linear constructs when metadata permits
 
 ## User Story
 
@@ -287,11 +287,11 @@ The system must:
 
 A valid GenBank file produces:
 
-* visible sequence
-* feature annotations
-* sequence length
-* topology
-* clickable feature map
+- visible sequence
+- feature annotations
+- sequence length
+- topology
+- clickable feature map
 
 ---
 
@@ -305,22 +305,22 @@ A nucleotide-aware text editor forms the center of the application.
 
 The editor should provide:
 
-* monospaced DNA display
-* base position numbering
-* nucleotide selection
-* mutation editing
-* search
-* reverse complement
-* selected-region statistics
-* feature highlighting
-* codon highlighting when inside a CDS
+- monospaced DNA display
+- base position numbering
+- nucleotide selection
+- mutation editing
+- search
+- reverse complement
+- selected-region statistics
+- feature highlighting
+- codon highlighting when inside a CDS
 
 Optional syntax coloring:
 
-* A
-* T
-* G
-* C
+- A
+- T
+- G
+- C
 
 Avoid excessive coloring if it harms readability.
 
@@ -328,9 +328,9 @@ Avoid excessive coloring if it harms readability.
 
 Support searching for:
 
-* exact nucleotide sequence
-* feature names
-* short motifs
+- exact nucleotide sequence
+- feature names
+- short motifs
 
 ## User Story
 
@@ -348,13 +348,13 @@ Visualize annotated biological features along the DNA construct.
 
 At minimum:
 
-* gene
-* CDS
-* promoter
-* terminator
-* origin of replication
-* regulatory region
-* misc feature
+- gene
+- CDS
+- promoter
+- terminator
+- origin of replication
+- regulatory region
+- misc feature
 
 ## Linear Map
 
@@ -362,11 +362,11 @@ Display features according to sequence coordinates.
 
 Each feature should show:
 
-* label
-* start
-* end
-* direction
-* type
+- label
+- start
+- end
+- direction
+- type
 
 ## Circular Plasmid View
 
@@ -390,13 +390,13 @@ Translate DNA sequences into amino-acid sequences.
 
 Support:
 
-* all three forward reading frames
-* optionally three reverse-complement reading frames
-* standard genetic code
-* start codon identification
-* stop codon identification
-* annotated CDS translation
-* user-selected region translation
+- all three forward reading frames
+- optionally three reverse-complement reading frames
+- standard genetic code
+- start codon identification
+- stop codon identification
+- annotated CDS translation
+- user-selected region translation
 
 ## Translation View
 
@@ -417,11 +417,11 @@ Identify candidate open reading frames based on start/stop codons.
 
 Display:
 
-* frame
-* coordinates
-* nucleotide length
-* amino-acid length
-* strand
+- frame
+- coordinates
+- nucleotide length
+- amino-acid length
+- strand
 
 ## User Story
 
@@ -439,9 +439,9 @@ Calculate GC content for the complete construct and selected regions.
 
 Display:
 
-* overall GC %
-* selected-region GC %
-* local GC distribution
+- overall GC %
+- selected-region GC %
+- local GC distribution
 
 ## Optional Visualization
 
@@ -465,18 +465,18 @@ Maintain an internal dataset containing a curated set of common restriction enzy
 
 For each site display:
 
-* enzyme name
-* recognition sequence
-* position
-* number of occurrences
+- enzyme name
+- recognition sequence
+- position
+- number of occurrences
 
 Users should be able to:
 
-* search enzymes
-* enable/disable enzymes
-* highlight all cutting locations
-* identify unique cutters
-* inspect the resulting virtual fragments
+- search enzymes
+- enable/disable enzymes
+- highlight all cutting locations
+- identify unique cutters
+- inspect the resulting virtual fragments
 
 ## Fragment Simulation
 
@@ -510,33 +510,33 @@ Users can introduce mutations and inspect their consequences.
 
 ## Supported Mutation Types
 
-* substitution
-* insertion
-* deletion
+- substitution
+- insertion
+- deletion
 
 ## Mutation Record
 
 Each mutation should contain:
 
-* location
-* original sequence
-* modified sequence
-* affected feature
-* affected codon when applicable
-* resulting amino-acid change
-* consequence category
+- location
+- original sequence
+- modified sequence
+- affected feature
+- affected codon when applicable
+- resulting amino-acid change
+- consequence category
 
 ## Consequence Categories
 
 At minimum:
 
-* synonymous
-* missense
-* nonsense
-* frameshift
-* noncoding
-* start-loss
-* stop-loss
+- synonymous
+- missense
+- nonsense
+- frameshift
+- noncoding
+- start-loss
+- stop-loss
 
 ## Example Output
 
@@ -567,9 +567,9 @@ Compare two DNA constructs similarly to a source-code diff.
 
 Detect:
 
-* substitutions
-* insertions
-* deletions
+- substitutions
+- insertions
+- deletions
 
 Display differences in:
 
@@ -585,9 +585,9 @@ Modified:  ATG GAC TAT CCA
 
 Show:
 
-* added features
-* removed features
-* modified features
+- added features
+- removed features
+- modified features
 
 ### Protein Diff
 
@@ -609,20 +609,20 @@ Provide basic educational primer design around a selected target region.
 
 User selects:
 
-* amplification region
-* approximate primer length
-* approximate target melting-temperature range
+- amplification region
+- approximate primer length
+- approximate target melting-temperature range
 
 ## Outputs
 
 Show candidate primers with:
 
-* sequence
-* length
-* GC %
-* estimated melting temperature
-* binding location
-* orientation
+- sequence
+- length
+- GC %
+- estimated melting temperature
+- binding location
+- orientation
 
 ## Visualization
 
@@ -644,28 +644,28 @@ Simulate the conceptual result of PCR using selected primers and a DNA template.
 
 ## Inputs
 
-* DNA template
-* forward primer
-* reverse primer
+- DNA template
+- forward primer
+- reverse primer
 
 ## Outputs
 
 Display:
 
-* primer binding sites
-* primer orientation
-* expected amplified region
-* predicted amplicon length
-* resulting nucleotide sequence
+- primer binding sites
+- primer orientation
+- expected amplified region
+- predicted amplicon length
+- resulting nucleotide sequence
 
 ## Error States
 
 Explain cases such as:
 
-* primer not found
-* primers face away from each other
-* multiple plausible binding sites
-* no valid amplification region
+- primer not found
+- primers face away from each other
+- multiple plausible binding sites
+- no valid amplification region
 
 ## Educational Visualization
 
@@ -689,11 +689,11 @@ The MVP should prioritize understanding construct architecture rather than imple
 
 Users can add fragments representing:
 
-* backbone
-* promoter
-* coding sequence
-* terminator
-* other features
+- backbone
+- promoter
+- coding sequence
+- terminator
+- other features
 
 Fragments can be reordered visually.
 
@@ -701,10 +701,10 @@ Fragments can be reordered visually.
 
 Generate:
 
-* assembled DNA sequence
-* updated feature annotations
-* linear construct map
-* circular plasmid map where appropriate
+- assembled DNA sequence
+- updated feature annotations
+- linear construct map
+- circular plasmid map where appropriate
 
 ## Gibson-Style Assembly Visualization
 
@@ -712,9 +712,9 @@ Optionally illustrate overlapping fragment assembly conceptually.
 
 The product should show:
 
-* fragment boundaries
-* overlapping ends
-* resulting assembled construct
+- fragment boundaries
+- overlapping ends
+- resulting assembled construct
 
 It does not need to generate laboratory-ready assembly protocols.
 
@@ -732,20 +732,20 @@ Allow users to explore how multiple DNA sequences can encode the same protein.
 
 ## Inputs
 
-* protein-coding sequence
-* selected model organism from a limited built-in educational set
+- protein-coding sequence
+- selected model organism from a limited built-in educational set
 
 ## Outputs
 
 Show:
 
-* original DNA
-* optimized DNA
-* unchanged protein sequence
-* nucleotide differences
-* codons changed
-* GC-content change
-* codon-usage comparison
+- original DNA
+- optimized DNA
+- unchanged protein sequence
+- nucleotide differences
+- codons changed
+- GC-content change
+- codon-usage comparison
 
 ## Educational Objective
 
@@ -757,10 +757,10 @@ The feature should make clear that:
 
 For the learning-oriented MVP:
 
-* use public codon-frequency tables
-* restrict optimization to well-established model organisms
-* treat the result as computational/educational
-* do not automatically provide ordering or laboratory execution workflows
+- use public codon-frequency tables
+- restrict optimization to well-established model organisms
+- treat the result as computational/educational
+- do not automatically provide ordering or laboratory execution workflows
 
 ## User Story
 
@@ -827,12 +827,12 @@ interface Construct {
   description?: string
 
   sequence: string
-  topology: "linear" | "circular"
+  topology: 'linear' | 'circular'
 
   features: Feature[]
   mutations: Mutation[]
 
-  sourceFormat?: "fasta" | "genbank" | "manual"
+  sourceFormat?: 'fasta' | 'genbank' | 'manual'
 }
 ```
 
@@ -842,14 +842,7 @@ interface Construct {
 interface Feature {
   id: string
 
-  type:
-    | "gene"
-    | "CDS"
-    | "promoter"
-    | "terminator"
-    | "origin"
-    | "regulatory"
-    | "misc"
+  type: 'gene' | 'CDS' | 'promoter' | 'terminator' | 'origin' | 'regulatory' | 'misc'
 
   name: string
 
@@ -868,10 +861,7 @@ interface Feature {
 interface Mutation {
   id: string
 
-  type:
-    | "substitution"
-    | "insertion"
-    | "deletion"
+  type: 'substitution' | 'insertion' | 'deletion'
 
   position: number
 
@@ -896,13 +886,7 @@ interface ProteinEffect {
 
   aminoAcidPosition?: number
 
-  consequence:
-    | "synonymous"
-    | "missense"
-    | "nonsense"
-    | "frameshift"
-    | "start-loss"
-    | "stop-loss"
+  consequence: 'synonymous' | 'missense' | 'nonsense' | 'frameshift' | 'start-loss' | 'stop-loss'
 }
 ```
 
@@ -914,19 +898,19 @@ interface ProteinEffect {
 
 Recommended:
 
-* React
-* TypeScript
-* Vite
-* Tailwind
-* Zustand
+- React
+- TypeScript
+- Vite
+- Tailwind
+- Zustand
 
 ## Visualization
 
 Possible libraries:
 
-* SVG/D3 for sequence and plasmid visualization
-* custom canvas renderer for large sequences
-* lightweight charting for GC plots
+- SVG/D3 for sequence and plasmid visualization
+- custom canvas renderer for large sequences
+- lightweight charting for GC plots
 
 Avoid overengineering the visualization layer initially.
 
@@ -938,9 +922,9 @@ The initial application can operate mostly client-side.
 
 Optional lightweight backend:
 
-* FastAPI
-* Python
-* Biopython
+- FastAPI
+- Python
+- Biopython
 
 Python is especially useful for validating your own implementations against established biological libraries.
 
@@ -950,12 +934,12 @@ However, the educational objective suggests an important rule:
 
 Examples:
 
-* reverse complement
-* translation
-* ORF detection
-* restriction-site matching
-* GC calculation
-* basic sequence alignment
+- reverse complement
+- translation
+- ORF detection
+- restriction-site matching
+- GC calculation
+- basic sequence alignment
 
 This avoids turning the application into a UI wrapper around existing libraries.
 
@@ -1075,31 +1059,31 @@ Recommended:
 
 A short synthetic sequence demonstrating:
 
-* promoter
-* CDS
-* terminator
-* translation
+- promoter
+- CDS
+- terminator
+- translation
 
 ### Example 2: GFP Construct
 
 Demonstrates:
 
-* coding sequence
-* protein translation
-* mutations
-* codon changes
+- coding sequence
+- protein translation
+- mutations
+- codon changes
 
 ### Example 3: Educational Plasmid
 
 Demonstrates:
 
-* circular topology
-* origin
-* selectable marker
-* promoter
-* reporter gene
-* terminator
-* restriction sites
+- circular topology
+- origin
+- selectable marker
+- promoter
+- reporter gene
+- terminator
+- restriction sites
 
 Use well-characterized educational or publicly documented constructs.
 
@@ -1113,10 +1097,10 @@ Before considering each subsystem complete, the developer should be able to expl
 
 Understand:
 
-* 5' and 3' orientation
-* complementary bases
-* double-stranded DNA
-* reverse complement
+- 5' and 3' orientation
+- complementary bases
+- double-stranded DNA
+- reverse complement
 
 ## Gene Expression
 
@@ -1134,43 +1118,43 @@ Protein
 
 Understand:
 
-* codons
-* reading frames
-* start codons
-* stop codons
-* synonymous codons
+- codons
+- reading frames
+- start codons
+- stop codons
+- synonymous codons
 
 ## Features
 
 Understand:
 
-* promoter
-* gene
-* CDS
-* terminator
-* origin of replication
+- promoter
+- gene
+- CDS
+- terminator
+- origin of replication
 
 ## Genetic Variation
 
 Understand:
 
-* substitutions
-* insertions
-* deletions
-* synonymous mutations
-* missense mutations
-* nonsense mutations
-* frameshifts
+- substitutions
+- insertions
+- deletions
+- synonymous mutations
+- missense mutations
+- nonsense mutations
+- frameshifts
 
 ## Molecular Tools
 
 Understand conceptually:
 
-* restriction enzymes
-* primers
-* PCR
-* DNA assembly
-* plasmids
+- restriction enzymes
+- primers
+- PCR
+- DNA assembly
+- plasmids
 
 ---
 
@@ -1180,16 +1164,16 @@ Understand conceptually:
 
 Build:
 
-* project shell
-* FASTA parser
-* GenBank parser
-* sequence viewer
-* reverse complement
-* GC calculation
-* feature model
-* linear feature visualization
-* translation
-* ORF detection
+- project shell
+- FASTA parser
+- GenBank parser
+- sequence viewer
+- reverse complement
+- GC calculation
+- feature model
+- linear feature visualization
+- translation
+- ORF detection
 
 ### Milestone
 
@@ -1205,13 +1189,13 @@ DNA → features → CDS → protein
 
 Build:
 
-* sequence editing
-* mutation tracking
-* mutation consequence engine
-* restriction-site detection
-* restriction-map visualization
-* sequence comparison
-* DNA diff
+- sequence editing
+- mutation tracking
+- mutation consequence engine
+- restriction-site detection
+- restriction-map visualization
+- sequence comparison
+- DNA diff
 
 ### Milestone
 
@@ -1233,11 +1217,11 @@ mutation classification
 
 Build:
 
-* primer explorer
-* PCR simulation
-* virtual fragments
-* virtual construct assembly
-* plasmid visualization
+- primer explorer
+- PCR simulation
+- virtual fragments
+- virtual construct assembly
+- plasmid visualization
 
 ### Milestone
 
@@ -1249,13 +1233,13 @@ Select a region, design conceptual primers, simulate an amplicon, and place that
 
 Build:
 
-* codon optimization
-* protein diff
-* explain mode
-* educational examples
-* UX polish
-* tests
-* documentation
+- codon optimization
+- protein diff
+- explain mode
+- educational examples
+- UX polish
+- tests
+- documentation
 
 ### Final Milestone
 
@@ -1295,19 +1279,19 @@ Biological correctness matters more than visual polish.
 
 Test:
 
-* complement calculation
-* reverse complement
-* codon translation
-* all standard codons
-* reading frames
-* GC calculation
-* circular-coordinate handling
-* ORF detection
-* mutations
-* insertion/deletion frameshifts
-* restriction matching
-* PCR orientation
-* translation after mutations
+- complement calculation
+- reverse complement
+- codon translation
+- all standard codons
+- reading frames
+- GC calculation
+- circular-coordinate handling
+- ORF detection
+- mutations
+- insertion/deletion frameshifts
+- restriction matching
+- PCR orientation
+- translation after mutations
 
 ## Reference Validation
 
@@ -1329,11 +1313,11 @@ The goal is to understand the implementation while still validating correctness.
 
 The application should feel:
 
-* technical
-* dense but understandable
-* fast
-* keyboard-friendly
-* inspection-oriented
+- technical
+- dense but understandable
+- fast
+- keyboard-friendly
+- inspection-oriented
 
 Avoid making it look like a generic SaaS dashboard.
 
@@ -1396,28 +1380,28 @@ Instead track capability milestones.
 
 By completion, the developer should be able to:
 
-* explain how DNA encodes proteins
-* identify an ORF
-* interpret a GenBank file
-* explain a CDS
-* calculate the reverse complement
-* identify mutation consequences
-* explain why frameshifts occur
-* explain restriction sites
-* explain how primers define a PCR product
-* explain plasmid architecture
-* explain why codon optimization can change DNA without changing protein
+- explain how DNA encodes proteins
+- identify an ORF
+- interpret a GenBank file
+- explain a CDS
+- calculate the reverse complement
+- identify mutation consequences
+- explain why frameshifts occur
+- explain restriction sites
+- explain how primers define a PCR product
+- explain plasmid architecture
+- explain why codon optimization can change DNA without changing protein
 
 ## Engineering Metrics
 
 The application should:
 
-* correctly parse representative FASTA files
-* correctly parse representative GenBank files
-* handle sequences of at least hundreds of thousands of bases without catastrophic UI failure
-* provide deterministic analysis
-* maintain mutation history
-* preserve feature annotations during supported edits where logically possible
+- correctly parse representative FASTA files
+- correctly parse representative GenBank files
+- handle sequences of at least hundreds of thousands of bases without catastrophic UI failure
+- provide deterministic analysis
+- maintain mutation history
+- preserve feature annotations during supported edits where logically possible
 
 ---
 
@@ -1425,24 +1409,24 @@ The application should:
 
 Do not build:
 
-* user accounts
-* multiplayer collaboration
-* comments
-* lab inventory
-* electronic lab notebook functionality
-* billing
-* organization management
-* cloud synchronization
-* AI chat
-* automated DNA ordering
-* laboratory robotics
-* CRISPR guide design
-* genome-scale editing
-* clinical variant interpretation
-* sophisticated protein-structure prediction
-* exhaustive cloning-protocol generation
-* production-grade primer validation
-* laboratory execution instructions
+- user accounts
+- multiplayer collaboration
+- comments
+- lab inventory
+- electronic lab notebook functionality
+- billing
+- organization management
+- cloud synchronization
+- AI chat
+- automated DNA ordering
+- laboratory robotics
+- CRISPR guide design
+- genome-scale editing
+- clinical variant interpretation
+- sophisticated protein-structure prediction
+- exhaustive cloning-protocol generation
+- production-grade primer validation
+- laboratory execution instructions
 
 These may be useful eventually but distract from the project's learning objective.
 
@@ -1464,10 +1448,10 @@ Implement global/local pairwise alignment and visualize gaps.
 
 Show whether mutations alter:
 
-* charge
-* polarity
-* size
-* hydrophobicity
+- charge
+- polarity
+- size
+- hydrophobicity
 
 ## Genome Browser Mode
 

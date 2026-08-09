@@ -154,7 +154,10 @@ export function getFeaturePieces(
   feature: { start: number; end: number; segments?: FeatureSegment[] },
   seqLen: number,
 ): FeatureSegment[] {
-  const raw = feature.segments && feature.segments.length > 0 ? feature.segments : [{ start: feature.start, end: feature.end }]
+  const raw =
+    feature.segments && feature.segments.length > 0
+      ? feature.segments
+      : [{ start: feature.start, end: feature.end }]
   const pieces: FeatureSegment[] = []
   for (const r of raw) {
     if (r.end < r.start) {

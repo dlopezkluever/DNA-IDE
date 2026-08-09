@@ -1,10 +1,7 @@
 import type { Topology } from '../types/models'
 import { getSubsequence, reverseComplement } from './sequence'
 
-export type PCRErrorType =
-  | 'primer-not-found'
-  | 'primers-face-away'
-  | 'multiple-plausible-regions'
+export type PCRErrorType = 'primer-not-found' | 'primers-face-away' | 'multiple-plausible-regions'
 
 export interface PrimerBindingSite {
   start: number
@@ -67,7 +64,12 @@ export function simulatePCR(
   )
 
   if (fwdStarts.length === 0 || revSiteStarts.length === 0) {
-    const which = fwdStarts.length === 0 && revSiteStarts.length === 0 ? 'Neither primer' : fwdStarts.length === 0 ? 'Forward primer' : 'Reverse primer'
+    const which =
+      fwdStarts.length === 0 && revSiteStarts.length === 0
+        ? 'Neither primer'
+        : fwdStarts.length === 0
+          ? 'Forward primer'
+          : 'Reverse primer'
     return { success: false, error: 'primer-not-found', message: `${which} binds the template.` }
   }
 

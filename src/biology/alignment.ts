@@ -37,7 +37,13 @@ function coalesce(rawOps: RawOp[]): DiffOp[] {
       last.refEnd += refLen
       last.modEnd += modLen
     } else {
-      result.push({ type: op.type, refStart: refPos, refEnd: refPos + refLen, modStart: modPos, modEnd: modPos + modLen })
+      result.push({
+        type: op.type,
+        refStart: refPos,
+        refEnd: refPos + refLen,
+        modStart: modPos,
+        modEnd: modPos + modLen,
+      })
     }
     refPos += refLen
     modPos += modLen
@@ -56,7 +62,8 @@ function needlemanWunsch(ref: string, mod: string): DiffOp[] {
 
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
-      const diag = score[idx(i - 1, j - 1)] + (ref[i - 1] === mod[j - 1] ? MATCH_SCORE : MISMATCH_SCORE)
+      const diag =
+        score[idx(i - 1, j - 1)] + (ref[i - 1] === mod[j - 1] ? MATCH_SCORE : MISMATCH_SCORE)
       const up = score[idx(i - 1, j)] + GAP_PENALTY
       const left = score[idx(i, j - 1)] + GAP_PENALTY
       score[idx(i, j)] = Math.max(diag, up, left)
@@ -67,8 +74,17 @@ function needlemanWunsch(ref: string, mod: string): DiffOp[] {
   let i = n
   let j = m
   while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && score[idx(i, j)] === score[idx(i - 1, j - 1)] + (ref[i - 1] === mod[j - 1] ? MATCH_SCORE : MISMATCH_SCORE)) {
-      rawOps.push({ type: ref[i - 1] === mod[j - 1] ? 'match' : 'mismatch', refIdx: i - 1, modIdx: j - 1 })
+    if (
+      i > 0 &&
+      j > 0 &&
+      score[idx(i, j)] ===
+        score[idx(i - 1, j - 1)] + (ref[i - 1] === mod[j - 1] ? MATCH_SCORE : MISMATCH_SCORE)
+    ) {
+      rawOps.push({
+        type: ref[i - 1] === mod[j - 1] ? 'match' : 'mismatch',
+        refIdx: i - 1,
+        modIdx: j - 1,
+      })
       i--
       j--
     } else if (i > 0 && score[idx(i, j)] === score[idx(i - 1, j)] + GAP_PENALTY) {
@@ -90,20 +106,37 @@ function anchorHeuristic(ref: string, mod: string): DiffOp[] {
 
   const maxSuffix = Math.min(ref.length, mod.length) - prefixLen
   let suffixLen = 0
-  while (suffixLen < maxSuffix && ref[ref.length - 1 - suffixLen] === mod[mod.length - 1 - suffixLen]) suffixLen++
+  while (
+    suffixLen < maxSuffix &&
+    ref[ref.length - 1 - suffixLen] === mod[mod.length - 1 - suffixLen]
+  )
+    suffixLen++
 
   const ops: DiffOp[] = []
-  if (prefixLen > 0) ops.push({ type: 'match', refStart: 0, refEnd: prefixLen, modStart: 0, modEnd: prefixLen })
+  if (prefixLen > 0)
+    ops.push({ type: 'match', refStart: 0, refEnd: prefixLen, modStart: 0, modEnd: prefixLen })
 
   const refMidStart = prefixLen
   const refMidEnd = ref.length - suffixLen
   const modMidStart = prefixLen
   const modMidEnd = mod.length - suffixLen
   if (refMidEnd > refMidStart) {
-    ops.push({ type: 'deletion', refStart: refMidStart, refEnd: refMidEnd, modStart: modMidStart, modEnd: modMidStart })
+    ops.push({
+      type: 'deletion',
+      refStart: refMidStart,
+      refEnd: refMidEnd,
+      modStart: modMidStart,
+      modEnd: modMidStart,
+    })
   }
   if (modMidEnd > modMidStart) {
-    ops.push({ type: 'insertion', refStart: refMidEnd, refEnd: refMidEnd, modStart: modMidStart, modEnd: modMidEnd })
+    ops.push({
+      type: 'insertion',
+      refStart: refMidEnd,
+      refEnd: refMidEnd,
+      modStart: modMidStart,
+      modEnd: modMidEnd,
+    })
   }
 
   if (suffixLen > 0) {

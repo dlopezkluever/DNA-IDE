@@ -37,7 +37,13 @@ describe('findRestrictionSites', () => {
     const seq = 'TTC' + 'CCCCCC' + 'GAA' // wraps to "GAA" + "TTC" = "GAATTC"
     const circularMatches = findRestrictionSites(seq, [EcoRI], 'circular')
     expect(circularMatches).toEqual([
-      { enzymeId: 'EcoRI', enzymeName: 'EcoRI', position: 9, reverseStrand: false, cutPosition: 10 },
+      {
+        enzymeId: 'EcoRI',
+        enzymeName: 'EcoRI',
+        position: 9,
+        reverseStrand: false,
+        cutPosition: 10,
+      },
     ])
     expect(findRestrictionSites(seq, [EcoRI], 'linear')).toEqual([])
   })

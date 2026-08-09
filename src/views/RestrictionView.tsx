@@ -39,7 +39,10 @@ export function RestrictionView() {
 
   if (!construct) {
     return (
-      <ViewPlaceholder title="No construct loaded" note="Import a FASTA or GenBank file to begin." />
+      <ViewPlaceholder
+        title="No construct loaded"
+        note="Import a FASTA or GenBank file to begin."
+      />
     )
   }
 
@@ -51,7 +54,9 @@ export function RestrictionView() {
           Cut Sites ({matches.length})
         </h3>
         {matches.length === 0 ? (
-          <p className="text-xs text-(--color-text-muted)">No sites found for the enabled enzymes.</p>
+          <p className="text-xs text-(--color-text-muted)">
+            No sites found for the enabled enzymes.
+          </p>
         ) : (
           <table className="w-full font-mono text-xs">
             <thead>

@@ -27,7 +27,12 @@ export function MutationForm() {
   const reference = construct.sequence.slice(selection.start, selection.end)
   const alternateValid = VALID_BASES.test(alternate)
 
-  const run = (type: 'substitution' | 'insertion' | 'deletion', ref: string, alt: string, position: number) => {
+  const run = (
+    type: 'substitution' | 'insertion' | 'deletion',
+    ref: string,
+    alt: string,
+    position: number,
+  ) => {
     setError(null)
     try {
       applyMutation({ type, position, reference: ref, alternate: alt })

@@ -42,7 +42,10 @@ export function explainMutation(mutation: Mutation): ExplainStep[] {
       value: `${effect.codonBefore} → ${aminoAcidFullName(effect.aminoAcidBefore)}`,
     })
   }
-  steps.push({ label: 'Mutation', value: `${mutation.reference || '–'} → ${mutation.alternate || '–'}` })
+  steps.push({
+    label: 'Mutation',
+    value: `${mutation.reference || '–'} → ${mutation.alternate || '–'}`,
+  })
   if (effect?.codonAfter && effect.aminoAcidAfter) {
     steps.push({
       label: 'New codon',

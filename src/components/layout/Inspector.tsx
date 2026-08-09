@@ -63,10 +63,7 @@ export function Inspector() {
           <h2 className="mt-4 mb-1 text-xs font-semibold tracking-wide text-(--color-text-muted) uppercase">
             Selection
           </h2>
-          <StatRow
-            label="Range"
-            value={`${toDisplayPosition(selection.start)}-${selection.end}`}
-          />
+          <StatRow label="Range" value={`${toDisplayPosition(selection.start)}-${selection.end}`} />
           <StatRow label="Length" value={`${selectedSeq.length} bp`} />
           {selectedSeq.length > 0 && (
             <StatRow label="GC%" value={`${calculateGC(selectedSeq).toFixed(1)}%`} />

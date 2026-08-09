@@ -5,7 +5,15 @@ import { translateFeature } from '../biology/translation'
 import { toDisplayPosition } from '../biology/sequence'
 import { ViewPlaceholder } from '../components/common/ViewPlaceholder'
 
-function translateFeatureToStop(feature: { start: number; end: number; strand: 1 | -1; segments?: { start: number; end: number }[] }, seq: string): string {
+function translateFeatureToStop(
+  feature: {
+    start: number
+    end: number
+    strand: 1 | -1
+    segments?: { start: number; end: number }[]
+  },
+  seq: string,
+): string {
   const codons = translateFeature(feature, seq)
   let protein = ''
   for (const c of codons) {
@@ -22,14 +30,23 @@ const OP_COLOR: Record<string, string> = {
   deletion: 'bg-(--color-danger)/20 text-(--color-danger) line-through',
 }
 
-function SequenceDiff({ ops, ref, mod }: { ops: ReturnType<typeof alignSequences>; ref: string; mod: string }) {
+function SequenceDiff({
+  ops,
+  ref,
+  mod,
+}: {
+  ops: ReturnType<typeof alignSequences>
+  ref: string
+  mod: string
+}) {
   return (
     <div className="space-y-1 overflow-x-auto whitespace-pre font-mono text-xs">
       <div>
         <span className="mr-2 text-(--color-text-muted)">ref</span>
         {ops.map((op, i) => (
           <span key={i} className={OP_COLOR[op.type]}>
-            {ref.slice(op.refStart, op.refEnd) || (op.type === 'insertion' ? '·'.repeat(op.modEnd - op.modStart) : '')}
+            {ref.slice(op.refStart, op.refEnd) ||
+              (op.type === 'insertion' ? '·'.repeat(op.modEnd - op.modStart) : '')}
           </span>
         ))}
       </div>
@@ -37,7 +54,8 @@ function SequenceDiff({ ops, ref, mod }: { ops: ReturnType<typeof alignSequences
         <span className="mr-2 text-(--color-text-muted)">mod</span>
         {ops.map((op, i) => (
           <span key={i} className={OP_COLOR[op.type]}>
-            {mod.slice(op.modStart, op.modEnd) || (op.type === 'deletion' ? '·'.repeat(op.refEnd - op.refStart) : '')}
+            {mod.slice(op.modStart, op.modEnd) ||
+              (op.type === 'deletion' ? '·'.repeat(op.refEnd - op.refStart) : '')}
           </span>
         ))}
       </div>
@@ -74,7 +92,12 @@ export function CompareView() {
     // coordinates moved — a plain substitution changes protein content without
     // shifting the feature's start/end at all.
     const modById = new Map(modConstruct.features.map((f) => [f.id, f]))
-    const results: { name: string; ops: ReturnType<typeof alignSequences>; before: string; after: string }[] = []
+    const results: {
+      name: string
+      ops: ReturnType<typeof alignSequences>
+      before: string
+      after: string
+    }[] = []
     for (const before of refConstruct.features) {
       if (before.type !== 'CDS') continue
       const after = modById.get(before.id)
@@ -82,14 +105,22 @@ export function CompareView() {
       const beforeProtein = translateFeatureToStop(before, refConstruct.sequence)
       const afterProtein = translateFeatureToStop(after, modConstruct.sequence)
       if (beforeProtein === afterProtein) continue
-      results.push({ name: before.name, ops: diffProteins(beforeProtein, afterProtein), before: beforeProtein, after: afterProtein })
+      results.push({
+        name: before.name,
+        ops: diffProteins(beforeProtein, afterProtein),
+        before: beforeProtein,
+        after: afterProtein,
+      })
     }
     return results
   }, [refConstruct, modConstruct])
 
   if (!modConstruct) {
     return (
-      <ViewPlaceholder title="No construct loaded" note="Import a FASTA or GenBank file to begin." />
+      <ViewPlaceholder
+        title="No construct loaded"
+        note="Import a FASTA or GenBank file to begin."
+      />
     )
   }
 
@@ -125,7 +156,9 @@ export function CompareView() {
             <h3 className="mb-2 font-mono text-xs font-semibold tracking-wide text-(--color-text-muted) uppercase">
               DNA Diff
             </h3>
-            {dnaOps && <SequenceDiff ops={dnaOps} ref={refConstruct.sequence} mod={modConstruct.sequence} />}
+            {dnaOps && (
+              <SequenceDiff ops={dnaOps} ref={refConstruct.sequence} mod={modConstruct.sequence} />
+            )}
           </section>
 
           <section>
@@ -135,10 +168,14 @@ export function CompareView() {
             {featureDiff && (
               <div className="space-y-1 font-mono text-xs">
                 {featureDiff.added.map((f) => (
-                  <div key={f.id} className="text-(--color-accent)">+ {f.name} ({toDisplayPosition(f.start)}-{f.end})</div>
+                  <div key={f.id} className="text-(--color-accent)">
+                    + {f.name} ({toDisplayPosition(f.start)}-{f.end})
+                  </div>
                 ))}
                 {featureDiff.removed.map((f) => (
-                  <div key={f.id} className="text-(--color-danger)">- {f.name} ({toDisplayPosition(f.start)}-{f.end})</div>
+                  <div key={f.id} className="text-(--color-danger)">
+                    - {f.name} ({toDisplayPosition(f.start)}-{f.end})
+                  </div>
                 ))}
                 {featureDiff.modified.map(({ before, after }) => (
                   <div key={before.id} className="text-(--color-warn)">
@@ -146,9 +183,11 @@ export function CompareView() {
                     {toDisplayPosition(after.start)}-{after.end}
                   </div>
                 ))}
-                {featureDiff.added.length === 0 && featureDiff.removed.length === 0 && featureDiff.modified.length === 0 && (
-                  <div className="text-(--color-text-muted)">No feature changes.</div>
-                )}
+                {featureDiff.added.length === 0 &&
+                  featureDiff.removed.length === 0 &&
+                  featureDiff.modified.length === 0 && (
+                    <div className="text-(--color-text-muted)">No feature changes.</div>
+                  )}
               </div>
             )}
           </section>
@@ -158,12 +197,16 @@ export function CompareView() {
               Protein Diff
             </h3>
             {proteinDiffs.length === 0 ? (
-              <div className="font-mono text-xs text-(--color-text-muted)">No protein-level changes.</div>
+              <div className="font-mono text-xs text-(--color-text-muted)">
+                No protein-level changes.
+              </div>
             ) : (
               <div className="space-y-3">
                 {proteinDiffs.map((pd) => (
                   <div key={pd.name}>
-                    <div className="mb-1 font-mono text-xs text-(--color-text-secondary)">{pd.name}</div>
+                    <div className="mb-1 font-mono text-xs text-(--color-text-secondary)">
+                      {pd.name}
+                    </div>
                     <SequenceDiff ops={pd.ops} ref={pd.before} mod={pd.after} />
                   </div>
                 ))}

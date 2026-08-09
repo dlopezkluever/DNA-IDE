@@ -84,7 +84,8 @@ export function findORFs(seq: string, options: FindORFsOptions = {}): ORF[] {
       // Circular: scan a doubled reading sequence so ORFs spanning the
       // origin are found, but only keep the copy anchored in [0, L) and
       // discard the periodic echo plus any ORF longer than the genome itself.
-      const readingSeqDoubled = strand === 1 ? seq + seq : reverseComplement(seq) + reverseComplement(seq)
+      const readingSeqDoubled =
+        strand === 1 ? seq + seq : reverseComplement(seq) + reverseComplement(seq)
       for (const hit of scanReadingFrame(readingSeqDoubled, frame)) {
         const extStart = strand === 1 ? hit.start : 2 * L - hit.end
         const extEnd = strand === 1 ? hit.end : 2 * L - hit.start

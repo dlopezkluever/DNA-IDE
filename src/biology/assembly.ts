@@ -26,7 +26,12 @@ export interface AssembleResult {
 }
 
 /** Longest suffix of `a` that exactly matches a prefix of `b`, within [minOverlap, maxOverlap] — a Gibson-style homology overlap. */
-function computeJunctionOverlap(a: string, b: string, minOverlap: number, maxOverlap: number): number {
+function computeJunctionOverlap(
+  a: string,
+  b: string,
+  minOverlap: number,
+  maxOverlap: number,
+): number {
   const maxPossible = Math.min(maxOverlap, a.length, b.length)
   const upperA = a.toUpperCase()
   const upperB = b.toUpperCase()

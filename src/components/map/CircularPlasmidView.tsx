@@ -43,7 +43,14 @@ export function CircularPlasmidView({ name, sequenceLength, features }: Circular
   return (
     <div className="flex w-full items-center justify-center py-4">
       <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE} height={SIZE}>
-        <circle cx={CENTER} cy={CENTER} r={BACKBONE_RADIUS} fill="none" stroke="var(--color-border-strong)" strokeWidth={2} />
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={BACKBONE_RADIUS}
+          fill="none"
+          stroke="var(--color-border-strong)"
+          strokeWidth={2}
+        />
 
         {ticks.map((p) => {
           const angle = angleOf(p)
@@ -52,7 +59,14 @@ export function CircularPlasmidView({ name, sequenceLength, features }: Circular
           const label = polarToCartesian(BACKBONE_RADIUS - 16, angle)
           return (
             <g key={p}>
-              <line x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y} stroke="var(--color-text-muted)" strokeWidth={1} />
+              <line
+                x1={inner.x}
+                y1={inner.y}
+                x2={outer.x}
+                y2={outer.y}
+                stroke="var(--color-text-muted)"
+                strokeWidth={1}
+              />
               <text
                 x={label.x}
                 y={label.y}
@@ -78,7 +92,14 @@ export function CircularPlasmidView({ name, sequenceLength, features }: Circular
         >
           {name}
         </text>
-        <text x={CENTER} y={CENTER + 12} textAnchor="middle" fontSize={11} fill="var(--color-text-muted)" className="font-mono">
+        <text
+          x={CENTER}
+          y={CENTER + 12}
+          textAnchor="middle"
+          fontSize={11}
+          fill="var(--color-text-muted)"
+          className="font-mono"
+        >
           {sequenceLength.toLocaleString()} bp
         </text>
 
@@ -86,7 +107,8 @@ export function CircularPlasmidView({ name, sequenceLength, features }: Circular
           const pieces = getFeaturePieces(feature, sequenceLength)
           const color = FEATURE_TYPE_COLOR[feature.type]
           const isActive = feature.id === activeFeatureId
-          const midPos = (feature.start + (feature.end < feature.start ? sequenceLength : feature.end)) / 2
+          const midPos =
+            (feature.start + (feature.end < feature.start ? sequenceLength : feature.end)) / 2
           const labelPos = polarToCartesian(FEATURE_RADIUS + 16, angleOf(midPos % sequenceLength))
 
           return (

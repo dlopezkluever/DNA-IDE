@@ -19,7 +19,8 @@ export const EXAMPLE_CONSTRUCTS: ExampleConstruct[] = [
   {
     id: 'gfp-construct',
     name: 'GFP Construct',
-    description: 'A real GFP coding sequence (NCBI U73901.1) for translation, mutation, and codon-optimization demos.',
+    description:
+      'A real GFP coding sequence (NCBI U73901.1) for translation, mutation, and codon-optimization demos.',
     genbank: GFP_CONSTRUCT_GENBANK,
   },
   {

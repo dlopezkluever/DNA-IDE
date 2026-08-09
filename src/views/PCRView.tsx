@@ -10,7 +10,7 @@ import { ViewPlaceholder } from '../components/common/ViewPlaceholder'
 const ERROR_EXPLANATIONS: Record<string, string> = {
   'primer-not-found': 'One or both primers do not match anywhere in the template.',
   'primers-face-away':
-    'Both primers bind, but their 3\' ends point away from each other — PCR only amplifies the region between two oppositely oriented binding sites.',
+    "Both primers bind, but their 3' ends point away from each other — PCR only amplifies the region between two oppositely oriented binding sites.",
   'multiple-plausible-regions':
     'These primers bind more than one place; the reaction is not specific to a single product.',
 }
@@ -84,7 +84,10 @@ export function PCRView() {
 
   if (!construct) {
     return (
-      <ViewPlaceholder title="No construct loaded" note="Import a FASTA or GenBank file to begin." />
+      <ViewPlaceholder
+        title="No construct loaded"
+        note="Import a FASTA or GenBank file to begin."
+      />
     )
   }
 
@@ -161,7 +164,9 @@ export function PCRView() {
                   Forward binds:{' '}
                   <button
                     className="text-(--color-info) hover:underline"
-                    onClick={() => selectRange(result.forwardBinding!.start, result.forwardBinding!.end)}
+                    onClick={() =>
+                      selectRange(result.forwardBinding!.start, result.forwardBinding!.end)
+                    }
                   >
                     {toDisplayPosition(result.forwardBinding!.start)}-{result.forwardBinding!.end}
                   </button>
@@ -170,7 +175,9 @@ export function PCRView() {
                   Reverse binds:{' '}
                   <button
                     className="text-(--color-info) hover:underline"
-                    onClick={() => selectRange(result.reverseBinding!.start, result.reverseBinding!.end)}
+                    onClick={() =>
+                      selectRange(result.reverseBinding!.start, result.reverseBinding!.end)
+                    }
                   >
                     {toDisplayPosition(result.reverseBinding!.start)}-{result.reverseBinding!.end}
                   </button>
@@ -186,7 +193,8 @@ export function PCRView() {
               <div className="mb-1 text-(--color-danger)">
                 {result.error === 'primer-not-found' && 'Primer not found'}
                 {result.error === 'primers-face-away' && 'Primers face away from each other'}
-                {result.error === 'multiple-plausible-regions' && 'Multiple plausible binding regions'}
+                {result.error === 'multiple-plausible-regions' &&
+                  'Multiple plausible binding regions'}
               </div>
               <div className="text-(--color-text-secondary)">{result.message}</div>
               <div className="mt-1 text-(--color-text-muted)">

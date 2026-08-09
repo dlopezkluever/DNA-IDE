@@ -12,7 +12,13 @@ function readingSequence(feature: Feature, seq: string): string {
   return feature.strand === 1 ? parts.join('') : parts.map(reverseComplement).reverse().join('')
 }
 
-export function CodonOptimizationPanel({ feature, sequence }: { feature: Feature; sequence: string }) {
+export function CodonOptimizationPanel({
+  feature,
+  sequence,
+}: {
+  feature: Feature
+  sequence: string
+}) {
   const [open, setOpen] = useState(false)
   const [organism, setOrganism] = useState<OrganismId>('ecoli')
 
@@ -50,7 +56,11 @@ export function CodonOptimizationPanel({ feature, sequence }: { feature: Feature
             <div className="space-y-1 font-mono text-[11px]">
               <div>
                 <span className="text-(--color-text-muted)">Protein unchanged: </span>
-                <span className={result.proteinUnchanged ? 'text-(--color-accent)' : 'text-(--color-danger)'}>
+                <span
+                  className={
+                    result.proteinUnchanged ? 'text-(--color-accent)' : 'text-(--color-danger)'
+                  }
+                >
                   {result.proteinUnchanged ? 'yes' : 'no'}
                 </span>
               </div>
@@ -74,9 +84,9 @@ export function CodonOptimizationPanel({ feature, sequence }: { feature: Feature
                 ))}
               </div>
               <div className="pt-1 text-(--color-text-muted)">
-                Optimized DNA is {result.optimizedDNA.length} bp; translating it with either sequence
-                yields the identical protein — different DNA, same protein, because the genetic code
-                is redundant.
+                Optimized DNA is {result.optimizedDNA.length} bp; translating it with either
+                sequence yields the identical protein — different DNA, same protein, because the
+                genetic code is redundant.
               </div>
             </div>
           )}

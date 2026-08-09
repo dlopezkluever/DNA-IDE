@@ -39,7 +39,12 @@ export interface DesignPrimersResult {
   reverse: Primer[]
 }
 
-function buildPrimer(sequence: string, start: number, end: number, orientation: Primer['orientation']): Primer {
+function buildPrimer(
+  sequence: string,
+  start: number,
+  end: number,
+  orientation: Primer['orientation'],
+): Primer {
   return {
     sequence,
     length: sequence.length,
@@ -80,7 +85,8 @@ export function designPrimers(
   }
 
   const targetTm = (targetTmRange.min + targetTmRange.max) / 2
-  const byTmCloseness = (a: Primer, b: Primer) => Math.abs(a.tm - targetTm) - Math.abs(b.tm - targetTm)
+  const byTmCloseness = (a: Primer, b: Primer) =>
+    Math.abs(a.tm - targetTm) - Math.abs(b.tm - targetTm)
   forward.sort(byTmCloseness)
   reverse.sort(byTmCloseness)
 

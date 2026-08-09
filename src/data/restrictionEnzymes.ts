@@ -13,7 +13,8 @@ export interface RestrictionEnzyme {
 }
 
 function enzyme(name: string, site: string, topCut: number, bottomCut: number): RestrictionEnzyme {
-  const overhang: OverhangType = topCut === bottomCut ? 'blunt' : topCut < bottomCut ? '5-prime' : '3-prime'
+  const overhang: OverhangType =
+    topCut === bottomCut ? 'blunt' : topCut < bottomCut ? '5-prime' : '3-prime'
   return { id: name, name, site, topCut, bottomCut, overhang }
 }
 
