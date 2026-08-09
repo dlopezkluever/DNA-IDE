@@ -1,15 +1,22 @@
 import type { Feature } from '../../types/models'
 import { translateFeature } from '../../biology/translation'
 import { toDisplayPosition } from '../../biology/sequence'
+import { explainTranslation } from '../../biology/explain'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
+import { useUIStore } from '../../store/uiStore'
+import { ExplainBlock } from '../explain/ExplainBlock'
+import { CodonOptimizationPanel } from './CodonOptimizationPanel'
 
 interface CDSTranslationBlockProps {
   feature: Feature
   sequence: string
 }
 
+const EXPLAIN_CODON_LIMIT = 12
+
 export function CDSTranslationBlock({ feature, sequence }: CDSTranslationBlockProps) {
   const { selection, selectCodon, selectFeature } = useCrossHighlight()
+  const explainMode = useUIStore((s) => s.explainMode)
   const codons = translateFeature(feature, sequence)
   const proteinLength = codons.filter((c) => c.aa !== '*').length
 
@@ -47,6 +54,17 @@ export function CDSTranslationBlock({ feature, sequence }: CDSTranslationBlockPr
           )
         })}
       </div>
+      {explainMode && (
+        <div className="mt-2">
+          <ExplainBlock steps={explainTranslation(codons.slice(0, EXPLAIN_CODON_LIMIT))} />
+          {codons.length > EXPLAIN_CODON_LIMIT && (
+            <div className="mt-1 text-[10px] text-(--color-text-muted)">
+              Showing the first {EXPLAIN_CODON_LIMIT} of {codons.length} codons.
+            </div>
+          )}
+        </div>
+      )}
+      <CodonOptimizationPanel feature={feature} sequence={sequence} />
     </div>
   )
 }

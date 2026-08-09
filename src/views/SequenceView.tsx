@@ -11,14 +11,41 @@ import {
   formatProteinChange,
   aminoAcidFullName,
 } from '../utils/format'
+import { explainMutation } from '../biology/explain'
+import { ExplainBlock } from '../components/explain/ExplainBlock'
 
 const VALID_BASE_KEYS = new Set(['A', 'T', 'G', 'C'])
 
-function MutationToast({ mutation, onDismiss }: { mutation: Mutation; onDismiss: () => void }) {
+function MutationToast({
+  mutation,
+  explainMode,
+  onDismiss,
+}: {
+  mutation: Mutation
+  explainMode: boolean
+  onDismiss: () => void
+}) {
   const effect = mutation.proteinEffect
   const proteinChange = formatProteinChange(mutation)
   const before = aminoAcidFullName(effect?.aminoAcidBefore)
   const after = aminoAcidFullName(effect?.aminoAcidAfter)
+
+  if (explainMode) {
+    return (
+      <div className="shrink-0 border-b border-(--color-border) bg-(--color-bg-elevated) px-3 py-2">
+        <div className="mb-1 flex justify-end">
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="text-xs text-(--color-text-muted) hover:text-(--color-text-primary)"
+          >
+            ✕
+          </button>
+        </div>
+        <ExplainBlock steps={explainMutation(mutation)} />
+      </div>
+    )
+  }
 
   return (
     <div className="flex shrink-0 items-center gap-3 border-b border-(--color-border) bg-(--color-bg-elevated) px-3 py-1.5 font-mono text-xs">
@@ -48,6 +75,7 @@ export function SequenceView() {
   const constructs = useConstructStore((s) => s.constructs)
   const applyMutation = useConstructStore((s) => s.applyMutation)
   const selection = useUIStore((s) => s.selection)
+  const explainMode = useUIStore((s) => s.explainMode)
   const construct = activeConstructId ? constructs[activeConstructId] : null
   const [lastMutation, setLastMutation] = useState<Mutation | null>(null)
 
@@ -80,7 +108,11 @@ export function SequenceView() {
     <div className="flex h-full flex-col overflow-hidden" tabIndex={0} onKeyDown={handleKeyDown}>
       <SequenceToolbar />
       {lastMutation && (
-        <MutationToast mutation={lastMutation} onDismiss={() => setLastMutation(null)} />
+        <MutationToast
+          mutation={lastMutation}
+          explainMode={explainMode}
+          onDismiss={() => setLastMutation(null)}
+        />
       )}
       <div className="min-h-0 flex-1">
         <SequenceEditor sequence={construct.sequence} />

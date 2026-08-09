@@ -1,5 +1,7 @@
 import { useConstructStore } from '../../store/constructStore'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
+import { EXAMPLE_CONSTRUCTS } from '../../data/exampleConstructs'
+import { parseGenBank, constructFromGenBank } from '../../parsers/genbank'
 
 const FEATURE_TYPE_COLOR: Record<string, string> = {
   gene: 'text-(--color-info)',
@@ -17,20 +19,40 @@ export function ConstructExplorer() {
   const setActiveConstruct = useConstructStore((s) => s.setActiveConstruct)
   const { selectFeature, activeFeatureId } = useCrossHighlight()
 
+  const loadConstruct = useConstructStore((s) => s.loadConstruct)
   const constructList = Object.values(constructs)
   const activeConstruct = activeConstructId ? constructs[activeConstructId] : null
+
+  const loadExample = (id: string) => {
+    const example = EXAMPLE_CONSTRUCTS.find((e) => e.id === id)
+    if (!example) return
+    const { records } = parseGenBank(example.genbank)
+    if (records[0]) loadConstruct(constructFromGenBank(records[0]))
+  }
 
   return (
     <aside className="flex w-56 shrink-0 flex-col overflow-y-auto border-r border-(--color-border) bg-(--color-bg-surface)">
       <div className="border-b border-(--color-border) px-3 py-2">
-        <h2 className="text-xs font-semibold tracking-wide text-(--color-text-muted) uppercase">
+        <h2 className="mb-1.5 text-xs font-semibold tracking-wide text-(--color-text-muted) uppercase">
           Constructs
         </h2>
+        <select
+          value=""
+          onChange={(e) => loadExample(e.target.value)}
+          className="w-full rounded border border-(--color-border-strong) bg-(--color-bg-canvas) px-1.5 py-1 font-mono text-[11px] text-(--color-text-secondary)"
+        >
+          <option value="">Load example…</option>
+          {EXAMPLE_CONSTRUCTS.map((e) => (
+            <option key={e.id} value={e.id}>
+              {e.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {constructList.length === 0 && (
         <p className="px-3 py-4 text-xs text-(--color-text-muted)">
-          No constructs loaded. Import a FASTA file to get started.
+          No constructs loaded. Import a file or load an example above.
         </p>
       )}
 
