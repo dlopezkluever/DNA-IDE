@@ -144,6 +144,29 @@ export function featureLength(
   return spansOrigin(feature) ? seqLen - feature.start + feature.end : feature.end - feature.start
 }
 
+/**
+ * Splits a feature into contiguous, non-wrapping [start, end) pieces in the
+ * order they should be read/rendered: `segments` (already in transcription
+ * order, e.g. from a GenBank join()) are used as-is; a plain single-range
+ * feature that wraps the origin (end < start) is split into its two arcs.
+ */
+export function getFeaturePieces(
+  feature: { start: number; end: number; segments?: FeatureSegment[] },
+  seqLen: number,
+): FeatureSegment[] {
+  const raw = feature.segments && feature.segments.length > 0 ? feature.segments : [{ start: feature.start, end: feature.end }]
+  const pieces: FeatureSegment[] = []
+  for (const r of raw) {
+    if (r.end < r.start) {
+      pieces.push({ start: r.start, end: seqLen })
+      pieces.push({ start: 0, end: r.end })
+    } else {
+      pieces.push(r)
+    }
+  }
+  return pieces
+}
+
 /** GenBank display coordinates are 1-based inclusive; internal ones are 0-based half-open. */
 export function toDisplayPosition(i: number): number {
   return i + 1

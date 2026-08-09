@@ -4,6 +4,7 @@ import {
   translateCodon,
   translateDNA,
   translateFrame,
+  translateFeature,
   isStartCodon,
   isStopCodon,
   AMINO_ACID_INFO,
@@ -117,5 +118,53 @@ describe('translateFrame', () => {
   it('drops trailing bases that do not complete a codon', () => {
     const codons = translateFrame('ATGGAATT', 0, 1)
     expect(codons.length).toBe(2)
+  })
+})
+
+describe('translateFeature', () => {
+  const payload = 'ATGGAATTTTGA' // ATG GAA TTT TGA -> MEF*
+
+  it('plus-strand feature: codons carry direct plus-strand coordinates', () => {
+    const seq = 'AAA' + payload + 'AAA'
+    const codons = translateFeature({ start: 3, end: 15, strand: 1 }, seq)
+    expect(codons).toEqual([
+      { seq: 'ATG', aa: 'M', start: 3, end: 6 },
+      { seq: 'GAA', aa: 'E', start: 6, end: 9 },
+      { seq: 'TTT', aa: 'F', start: 9, end: 12 },
+      { seq: 'TGA', aa: '*', start: 12, end: 15 },
+    ])
+  })
+
+  it('minus-strand feature: reads MEF* with coordinates decreasing across the codon list', () => {
+    const seq = 'AAA' + reverseComplement(payload) + 'AAA'
+    const codons = translateFeature({ start: 3, end: 15, strand: -1 }, seq)
+    expect(codons.map((c) => c.aa).join('')).toBe('MEF*')
+    expect(codons).toEqual([
+      { seq: 'ATG', aa: 'M', start: 12, end: 15 },
+      { seq: 'GAA', aa: 'E', start: 9, end: 12 },
+      { seq: 'TTT', aa: 'F', start: 6, end: 9 },
+      { seq: 'TGA', aa: '*', start: 3, end: 6 },
+    ])
+  })
+
+  it('minus-strand spliced feature (complement(join(...))): reads MEF* across the junction', () => {
+    // Same fixture as mutations.test.ts's complement(join(...)) case.
+    const piece1 = 'TCAAAA' // [0,6)
+    const spacer = 'CCCCCCCCCC'
+    const piece2 = 'TTCCAT' // [16,22)
+    const seq = piece1 + spacer + piece2
+    const feature = {
+      start: 0,
+      end: 22,
+      strand: -1 as const,
+      segments: [
+        { start: 0, end: 6 },
+        { start: 16, end: 22 },
+      ],
+    }
+    const codons = translateFeature(feature, seq)
+    expect(codons.map((c) => c.aa).join('')).toBe('MEF*')
+    expect(codons[0]).toEqual({ seq: 'ATG', aa: 'M', start: 19, end: 22 })
+    expect(codons[3]).toEqual({ seq: 'TGA', aa: '*', start: 0, end: 3 })
   })
 })

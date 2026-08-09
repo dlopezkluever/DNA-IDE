@@ -1,5 +1,5 @@
 import { useConstructStore } from '../../store/constructStore'
-import { useUIStore } from '../../store/uiStore'
+import { useCrossHighlight } from '../../hooks/useCrossHighlight'
 
 const FEATURE_TYPE_COLOR: Record<string, string> = {
   gene: 'text-(--color-info)',
@@ -15,9 +15,7 @@ export function ConstructExplorer() {
   const constructs = useConstructStore((s) => s.constructs)
   const activeConstructId = useConstructStore((s) => s.activeConstructId)
   const setActiveConstruct = useConstructStore((s) => s.setActiveConstruct)
-  const setActiveFeatureId = useUIStore((s) => s.setActiveFeatureId)
-  const setSelection = useUIStore((s) => s.setSelection)
-  const activeFeatureId = useUIStore((s) => s.activeFeatureId)
+  const { selectFeature, activeFeatureId } = useCrossHighlight()
 
   const constructList = Object.values(constructs)
   const activeConstruct = activeConstructId ? constructs[activeConstructId] : null
@@ -68,10 +66,7 @@ export function ConstructExplorer() {
                 <li key={f.id}>
                   <button
                     type="button"
-                    onClick={() => {
-                      setActiveFeatureId(f.id)
-                      setSelection({ start: f.start, end: f.end, strand: f.strand })
-                    }}
+                    onClick={() => selectFeature(f)}
                     className={`flex w-full items-center gap-1.5 truncate rounded px-1.5 py-0.5 text-left font-mono text-xs ${
                       f.id === activeFeatureId
                         ? 'bg-(--color-bg-hover)'

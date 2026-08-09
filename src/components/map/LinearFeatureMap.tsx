@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import type { Feature, FeatureType } from '../../types/models'
-import { toDisplayPosition } from '../../biology/sequence'
-import { useUIStore } from '../../store/uiStore'
+import { toDisplayPosition, getFeaturePieces } from '../../biology/sequence'
+import { useCrossHighlight } from '../../hooks/useCrossHighlight'
 
 const VIEW_WIDTH = 1000
 const RULER_HEIGHT = 24
@@ -17,25 +17,6 @@ const TYPE_COLOR: Record<FeatureType, string> = {
   origin: 'var(--color-text-secondary)',
   regulatory: 'var(--color-base-g)',
   misc: 'var(--color-text-muted)',
-}
-
-interface Piece {
-  start: number
-  end: number
-}
-
-function featurePieces(feature: Feature, seqLen: number): Piece[] {
-  const raw = feature.segments && feature.segments.length > 0 ? feature.segments : [{ start: feature.start, end: feature.end }]
-  const pieces: Piece[] = []
-  for (const r of raw) {
-    if (r.end < r.start) {
-      pieces.push({ start: r.start, end: seqLen })
-      pieces.push({ start: 0, end: r.end })
-    } else {
-      pieces.push(r)
-    }
-  }
-  return pieces
 }
 
 function assignLanes(features: Feature[], seqLen: number): Map<string, number> {
@@ -75,9 +56,7 @@ interface LinearFeatureMapProps {
 }
 
 export function LinearFeatureMap({ sequenceLength, features }: LinearFeatureMapProps) {
-  const activeFeatureId = useUIStore((s) => s.activeFeatureId)
-  const setActiveFeatureId = useUIStore((s) => s.setActiveFeatureId)
-  const setSelection = useUIStore((s) => s.setSelection)
+  const { activeFeatureId, selectFeature } = useCrossHighlight()
 
   const laneOf = useMemo(() => assignLanes(features, sequenceLength), [features, sequenceLength])
   const laneCount = Math.max(1, new Set(laneOf.values()).size)
@@ -134,16 +113,13 @@ export function LinearFeatureMap({ sequenceLength, features }: LinearFeatureMapP
           const lane = laneOf.get(feature.id) ?? 0
           const y = RULER_HEIGHT + lane * (LANE_HEIGHT + LANE_GAP)
           const color = TYPE_COLOR[feature.type]
-          const pieces = featurePieces(feature, sequenceLength)
+          const pieces = getFeaturePieces(feature, sequenceLength)
           const isActive = feature.id === activeFeatureId
 
           return (
             <g
               key={feature.id}
-              onClick={() => {
-                setActiveFeatureId(feature.id)
-                setSelection({ start: feature.start, end: feature.end, strand: feature.strand })
-              }}
+              onClick={() => selectFeature(feature)}
               className="cursor-pointer"
             >
               {pieces.map((piece, i) => {

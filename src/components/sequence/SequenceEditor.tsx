@@ -82,13 +82,18 @@ export function SequenceEditor({ sequence }: SequenceEditorProps) {
   const draggingRef = useRef(false)
   const anchorRef = useRef<number | null>(null)
 
+  const setActiveFeatureId = useUIStore((s) => s.setActiveFeatureId)
+  const setActiveMutationId = useUIStore((s) => s.setActiveMutationId)
+
   const onBaseMouseDown = useCallback(
     (index: number) => {
       draggingRef.current = true
       anchorRef.current = index
+      setActiveFeatureId(null)
+      setActiveMutationId(null)
       setSelection({ start: index, end: index + 1 })
     },
-    [setSelection],
+    [setSelection, setActiveFeatureId, setActiveMutationId],
   )
 
   const onBaseMouseEnter = useCallback(

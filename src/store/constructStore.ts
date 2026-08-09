@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import type { Construct } from '../types/models'
+import type { Construct, Mutation } from '../types/models'
+import { applyMutation as applyMutationToConstruct, type MutationInput } from '../biology/mutations'
 
 interface ConstructState {
   constructs: Record<string, Construct>
@@ -13,9 +14,10 @@ interface ConstructState {
   setCompareConstruct: (id: string | null) => void
   removeConstruct: (id: string) => void
   updateConstruct: (id: string, construct: Construct) => void
+  applyMutation: (input: MutationInput) => Mutation
 }
 
-export const useConstructStore = create<ConstructState>((set) => ({
+export const useConstructStore = create<ConstructState>((set, get) => ({
   constructs: {},
   activeConstructId: null,
   originalConstructId: null,
@@ -46,4 +48,31 @@ export const useConstructStore = create<ConstructState>((set) => ({
 
   updateConstruct: (id, construct) =>
     set((state) => ({ constructs: { ...state.constructs, [id]: construct } })),
+
+  // Fork-once model: the first mutation on a freshly loaded construct forks off a
+  // "-edited" working copy, leaving the pristine original in place under its own id
+  // (recorded as originalConstructId) so Compare can always diff original vs. active.
+  // Every subsequent mutation updates that same working copy in place.
+  applyMutation: (input) => {
+    const state = get()
+    const activeId = state.activeConstructId
+    if (!activeId) throw new Error('No active construct to mutate')
+
+    const isFirstEdit = state.originalConstructId === null
+    const workingId = isFirstEdit ? `${activeId}-edited` : activeId
+    const source = state.constructs[activeId]
+    const base: Construct = isFirstEdit
+      ? { ...source, id: workingId, name: `${source.name} (edited)` }
+      : source
+
+    const { construct: updated, mutation } = applyMutationToConstruct(base, input)
+
+    set((s) => ({
+      constructs: { ...s.constructs, [workingId]: updated },
+      activeConstructId: workingId,
+      originalConstructId: isFirstEdit ? activeId : s.originalConstructId,
+    }))
+
+    return mutation
+  },
 }))
