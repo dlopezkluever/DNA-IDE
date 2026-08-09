@@ -1,5 +1,6 @@
 import { useConstructStore } from '../store/constructStore'
 import { CDSTranslationBlock } from '../components/protein/CDSTranslationBlock'
+import { ORFList } from '../components/protein/ORFList'
 import { ViewPlaceholder } from '../components/common/ViewPlaceholder'
 
 export function ProteinView() {
@@ -18,20 +19,19 @@ export function ProteinView() {
 
   const cdsFeatures = construct.features.filter((f) => f.type === 'CDS')
 
-  if (cdsFeatures.length === 0) {
-    return (
-      <ViewPlaceholder
-        title="No CDS features"
-        note="This construct has no annotated coding sequences to translate."
-      />
-    )
-  }
-
   return (
     <div className="h-full overflow-y-auto px-4 py-3">
-      {cdsFeatures.map((f) => (
-        <CDSTranslationBlock key={f.id} feature={f} sequence={construct.sequence} />
-      ))}
+      <ORFList sequence={construct.sequence} topology={construct.topology} />
+      {cdsFeatures.length === 0 ? (
+        <ViewPlaceholder
+          title="No annotated CDS features"
+          note="This construct has no annotated coding sequences. Expand 'Detected ORFs' above to find candidate reading frames."
+        />
+      ) : (
+        cdsFeatures.map((f) => (
+          <CDSTranslationBlock key={f.id} feature={f} sequence={construct.sequence} />
+        ))
+      )}
     </div>
   )
 }
