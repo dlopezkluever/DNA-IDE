@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Strand } from '../types/models'
+import { RESTRICTION_ENZYMES } from '../data/restrictionEnzymes'
 
 export type ViewId =
   | 'sequence'
@@ -63,7 +64,7 @@ export const useUIStore = create<UIState>()(
       activeFeatureId: null,
       activeMutationId: null,
 
-      enabledEnzymeIds: [],
+      enabledEnzymeIds: RESTRICTION_ENZYMES.map((e) => e.id),
 
       searchQuery: '',
       searchResults: [],

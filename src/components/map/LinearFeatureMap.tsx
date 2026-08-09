@@ -1,23 +1,14 @@
 import { useMemo } from 'react'
-import type { Feature, FeatureType } from '../../types/models'
+import type { Feature } from '../../types/models'
 import { toDisplayPosition, getFeaturePieces } from '../../biology/sequence'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
+import { FEATURE_TYPE_COLOR } from '../../data/featureColors'
 
 const VIEW_WIDTH = 1000
 const RULER_HEIGHT = 24
 const LANE_HEIGHT = 22
 const LANE_GAP = 4
 const FEATURE_BAR_HEIGHT = 14
-
-const TYPE_COLOR: Record<FeatureType, string> = {
-  gene: 'var(--color-info)',
-  CDS: 'var(--color-accent)',
-  promoter: 'var(--color-warn)',
-  terminator: 'var(--color-danger)',
-  origin: 'var(--color-text-secondary)',
-  regulatory: 'var(--color-base-g)',
-  misc: 'var(--color-text-muted)',
-}
 
 function assignLanes(features: Feature[], seqLen: number): Map<string, number> {
   const sorted = [...features].sort((a, b) => a.start - b.start)
@@ -112,7 +103,7 @@ export function LinearFeatureMap({ sequenceLength, features }: LinearFeatureMapP
         {features.map((feature) => {
           const lane = laneOf.get(feature.id) ?? 0
           const y = RULER_HEIGHT + lane * (LANE_HEIGHT + LANE_GAP)
-          const color = TYPE_COLOR[feature.type]
+          const color = FEATURE_TYPE_COLOR[feature.type]
           const pieces = getFeaturePieces(feature, sequenceLength)
           const isActive = feature.id === activeFeatureId
 
