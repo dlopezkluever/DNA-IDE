@@ -1,8 +1,10 @@
 import { useRef, useState, type DragEvent } from 'react'
 import { parseFASTA, constructFromFASTA } from '../../parsers/fasta'
+import { parseGenBank, constructFromGenBank } from '../../parsers/genbank'
 import { useConstructStore } from '../../store/constructStore'
 
 const FASTA_EXTENSIONS = ['.fasta', '.fa', '.fna']
+const GENBANK_EXTENSIONS = ['.gb', '.gbk']
 
 function extensionOf(filename: string): string {
   const idx = filename.lastIndexOf('.')
@@ -13,11 +15,13 @@ export function FileImport() {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragOver, setDragOver] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [warning, setWarning] = useState<string | null>(null)
   const loadConstruct = useConstructStore((s) => s.loadConstruct)
 
   const importText = (filename: string, text: string) => {
     const ext = extensionOf(filename)
     setError(null)
+    setWarning(null)
 
     if (FASTA_EXTENSIONS.includes(ext)) {
       const records = parseFASTA(text)
@@ -28,10 +32,34 @@ export function FileImport() {
       for (const record of records) {
         loadConstruct(constructFromFASTA(record))
       }
+      const invalidCount = records.reduce((n, r) => n + r.issues.length, 0)
+      if (invalidCount > 0) {
+        setWarning(`${filename}: ${invalidCount} unexpected character(s) in sequence data.`)
+      }
       return
     }
 
-    setError(`Unsupported file type "${ext || filename}". Use .fasta, .fa, or .fna.`)
+    if (GENBANK_EXTENSIONS.includes(ext)) {
+      const { records, fileError } = parseGenBank(text)
+      if (fileError) {
+        setError(`${filename}: ${fileError}`)
+        return
+      }
+      for (const record of records) {
+        loadConstruct(constructFromGenBank(record))
+      }
+      const allWarnings = records.flatMap((r) => r.warnings)
+      if (allWarnings.length > 0) {
+        setWarning(
+          `${filename}: ${allWarnings.length} feature(s) skipped — ${allWarnings[0]}${
+            allWarnings.length > 1 ? ` (+${allWarnings.length - 1} more)` : ''
+          }`,
+        )
+      }
+      return
+    }
+
+    setError(`Unsupported file type "${ext || filename}". Use .fasta, .fa, .fna, .gb, or .gbk.`)
   }
 
   const handleFiles = (files: FileList | null) => {
@@ -72,7 +100,7 @@ export function FileImport() {
       <input
         ref={inputRef}
         type="file"
-        accept=".fasta,.fa,.fna"
+        accept=".fasta,.fa,.fna,.gb,.gbk"
         multiple
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
@@ -80,6 +108,11 @@ export function FileImport() {
       {error && (
         <span className="max-w-72 truncate text-xs text-(--color-danger)" title={error}>
           {error}
+        </span>
+      )}
+      {!error && warning && (
+        <span className="max-w-72 truncate text-xs text-(--color-warn)" title={warning}>
+          {warning}
         </span>
       )}
     </div>
