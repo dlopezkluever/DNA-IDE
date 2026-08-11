@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { applyMutation, classifyMutation, shiftFeatureCoordinates } from './mutations'
+import {
+  applyMutation,
+  classifyMutation,
+  computeMutationHeatmap,
+  shiftFeatureCoordinates,
+  type MutationHeatmapCell,
+} from './mutations'
 import { reverseComplement } from './sequence'
 import type { Construct, Feature } from '../types/models'
 
@@ -268,6 +274,61 @@ describe('classifyMutation: minus-strand spliced (complement(join(...))) CDS', (
       aminoAcidAfter: 'V',
       aminoAcidPosition: 1,
     })
+  })
+})
+
+describe('computeMutationHeatmap', () => {
+  function cellsAt(cells: MutationHeatmapCell[], codonIndex: number, positionInCodon: 0 | 1 | 2) {
+    return cells.filter((c) => c.codonIndex === codonIndex && c.positionInCodon === positionInCodon)
+  }
+
+  it('produces exactly 3 cells per position (cdsLength * 3 total)', () => {
+    const payload = 'ATGGAATTTTGA' // ATG GAA TTT TGA, 12 nt CDS
+    const seq = 'AAA' + payload + 'AAA'
+    const result = computeMutationHeatmap(cds(), seq)
+    expect(result.cdsLength).toBe(12)
+    expect(result.cells).toHaveLength(36)
+    expect(result.aminoAcidLength).toBe(3) // M E F, stop excluded
+  })
+
+  it('a mutation at codon-0 position-0 that breaks ATG produces start-loss', () => {
+    const payload = 'ATGGAATTTTGA'
+    const seq = 'AAA' + payload + 'AAA'
+    const result = computeMutationHeatmap(cds(), seq)
+    const cells = cellsAt(result.cells, 0, 0)
+    expect(cells).toHaveLength(3)
+    for (const cell of cells) {
+      expect(cell.referenceBase).toBe('A')
+      expect(cell.effect.consequence).toBe('start-loss')
+    }
+  })
+
+  it('a mutation at the final codon that breaks a stop codon produces stop-loss', () => {
+    const payload = 'ATGGAATTTTGA' // final codon TGA at codonIndex 3
+    const seq = 'AAA' + payload + 'AAA'
+    const result = computeMutationHeatmap(cds(), seq)
+    const cell = cellsAt(result.cells, 3, 0).find((c) => c.alternateBase === 'A')
+    // T -> A at position 0 of TGA gives AGA (Arg), no longer a stop codon
+    expect(cell?.effect).toMatchObject({ consequence: 'stop-loss', codonBefore: 'TGA', codonAfter: 'AGA' })
+  })
+
+  it('third-codon-position wobble on a fourfold-degenerate codon is entirely synonymous', () => {
+    const payload = 'ATGGCATTTTGA' // ATG GCA TTT TGA (Met-Ala-Phe-Stop); GCx is fourfold-degenerate for Ala
+    const seq = 'AAA' + payload + 'AAA'
+    const result = computeMutationHeatmap(cds(), seq)
+    const cells = cellsAt(result.cells, 1, 2) // codon 1 = GCA, position-in-codon 2 = the wobble base
+    expect(cells).toHaveLength(3)
+    for (const cell of cells) {
+      expect(cell.effect.consequence).toBe('synonymous')
+    }
+  })
+
+  it('never produces frameshift, in-frame-indel, or noncoding consequences', () => {
+    const payload = 'ATGGCATTTTGA'
+    const seq = 'AAA' + payload + 'AAA'
+    const result = computeMutationHeatmap(cds(), seq)
+    const unreachable = new Set(['frameshift', 'in-frame-indel', 'noncoding'])
+    expect(result.cells.some((c) => unreachable.has(c.effect.consequence))).toBe(false)
   })
 })
 

@@ -31,8 +31,18 @@ interface UIState {
   searchQuery: string
   searchResults: SearchMatch[]
 
+  isPaletteOpen: boolean
+  rcPreviewOpen: boolean
+  orfListOpen: boolean
+  mutationHeatmapOpen: boolean
+
   setActiveView: (view: ViewId) => void
   toggleExplainMode: () => void
+
+  setPaletteOpen: (open: boolean) => void
+  setRcPreviewOpen: (open: boolean) => void
+  setOrfListOpen: (open: boolean) => void
+  setMutationHeatmapOpen: (open: boolean) => void
 
   setSelection: (selection: Selection | null) => void
   setHoveredCodon: (codon: { start: number; end: number } | null) => void
@@ -62,8 +72,18 @@ export const useUIStore = create<UIState>()(
       searchQuery: '',
       searchResults: [],
 
+      isPaletteOpen: false,
+      rcPreviewOpen: false,
+      orfListOpen: false,
+      mutationHeatmapOpen: false,
+
       setActiveView: (view) => set({ activeView: view }),
       toggleExplainMode: () => set((state) => ({ explainMode: !state.explainMode })),
+
+      setPaletteOpen: (isPaletteOpen) => set({ isPaletteOpen }),
+      setRcPreviewOpen: (rcPreviewOpen) => set({ rcPreviewOpen }),
+      setOrfListOpen: (orfListOpen) => set({ orfListOpen }),
+      setMutationHeatmapOpen: (mutationHeatmapOpen) => set({ mutationHeatmapOpen }),
 
       setSelection: (selection) => set({ selection }),
       setHoveredCodon: (hoveredCodon) => set({ hoveredCodon }),

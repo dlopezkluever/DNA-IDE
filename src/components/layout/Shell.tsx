@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import { useUIStore } from '../../store/uiStore'
 import { TopBar } from './TopBar'
 import { ConstructExplorer } from './ConstructExplorer'
 import { Inspector } from './Inspector'
 import { ViewTabs } from './ViewTabs'
 import { FeatureMapStrip } from '../map/FeatureMapStrip'
+import { CommandPalette } from '../palette/CommandPalette'
 import { SequenceView } from '../../views/SequenceView'
 import { MapView } from '../../views/MapView'
 import { ProteinView } from '../../views/ProteinView'
@@ -15,6 +17,19 @@ import { AssemblyView } from '../../views/AssemblyView'
 
 export function Shell() {
   const activeView = useUIStore((s) => s.activeView)
+  const isPaletteOpen = useUIStore((s) => s.isPaletteOpen)
+  const setPaletteOpen = useUIStore((s) => s.setPaletteOpen)
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen(!isPaletteOpen)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isPaletteOpen, setPaletteOpen])
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-(--color-bg-canvas) text-(--color-text-primary)">
@@ -35,6 +50,7 @@ export function Shell() {
       </div>
       <FeatureMapStrip />
       <ViewTabs />
+      <CommandPalette />
     </div>
   )
 }

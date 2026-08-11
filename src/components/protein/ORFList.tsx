@@ -2,12 +2,14 @@ import { useMemo, useState } from 'react'
 import { findORFs } from '../../biology/orf'
 import { toDisplayPosition } from '../../biology/sequence'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
+import { useUIStore } from '../../store/uiStore'
 import type { Topology } from '../../types/models'
 
 const MIN_LENGTH_OPTIONS = [30, 100, 300, 600]
 
 export function ORFList({ sequence, topology }: { sequence: string; topology: Topology }) {
-  const [open, setOpen] = useState(false)
+  const open = useUIStore((s) => s.orfListOpen)
+  const setOpen = useUIStore((s) => s.setOrfListOpen)
   const [minLength, setMinLength] = useState(100)
   const { selectRange } = useCrossHighlight()
 
@@ -20,7 +22,7 @@ export function ORFList({ sequence, topology }: { sequence: string; topology: To
     <div className="mb-6 border-b border-(--color-border) pb-4">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(!open)}
         className="mb-2 flex items-center gap-2 font-mono text-sm text-(--color-accent) hover:underline"
       >
         {open ? '▾' : '▸'} Detected ORFs (all 6 frames)
