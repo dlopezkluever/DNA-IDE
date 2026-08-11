@@ -1,6 +1,7 @@
 import { useConstructStore } from '../store/constructStore'
 import { MutationForm } from '../components/mutations/MutationForm'
 import { MutationList } from '../components/mutations/MutationList'
+import { MutationHeatmap } from '../components/mutations/MutationHeatmap'
 import { ViewPlaceholder } from '../components/common/ViewPlaceholder'
 
 export function MutationsView() {
@@ -17,6 +18,7 @@ export function MutationsView() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
+      <MutationHeatmap />
       <MutationForm />
       <div className="min-h-0 flex-1 overflow-y-auto">
         <MutationList />

@@ -7,6 +7,7 @@ export function TopBar() {
   const constructs = useConstructStore((s) => s.constructs)
   const explainMode = useUIStore((s) => s.explainMode)
   const toggleExplainMode = useUIStore((s) => s.toggleExplainMode)
+  const setPaletteOpen = useUIStore((s) => s.setPaletteOpen)
 
   const activeConstruct = activeConstructId ? constructs[activeConstructId] : null
 
@@ -28,6 +29,14 @@ export function TopBar() {
 
       <div className="flex items-center gap-3">
         <FileImport />
+        <button
+          type="button"
+          onClick={() => setPaletteOpen(true)}
+          className="rounded border border-(--color-border-strong) px-2 py-1 font-mono text-xs text-(--color-text-secondary) transition-colors hover:border-(--color-text-muted)"
+          title="Open command palette (Ctrl/Cmd+K)"
+        >
+          ⌘K
+        </button>
         <button
           type="button"
           onClick={toggleExplainMode}

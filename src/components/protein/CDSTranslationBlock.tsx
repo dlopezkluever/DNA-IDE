@@ -21,7 +21,7 @@ export function CDSTranslationBlock({ feature, sequence }: CDSTranslationBlockPr
   const proteinLength = codons.filter((c) => c.aa !== '*').length
 
   return (
-    <div className="mb-6">
+    <div id={`cds-${feature.id}`} className="mb-6">
       <button
         type="button"
         onClick={() => selectFeature(feature)}

@@ -8,7 +8,13 @@ import type {
   ProteinEffect,
 } from '../types/models'
 import { getFeaturePieces, reverseComplement } from './sequence'
-import { isStartCodon, translateCodon, translateDNA } from './translation'
+import {
+  isStartCodon,
+  readingBasesWithCoords,
+  translateCodon,
+  translateDNA,
+  translateFeature,
+} from './translation'
 
 export interface MutationInput {
   type: MutationType
@@ -150,6 +156,15 @@ export function classifyMutation(
   const codonAfter = cdsAfter.slice(codonStart, codonStart + 3)
   if (codonBefore.length < 3 || codonAfter.length < 3) return { consequence: 'noncoding' }
 
+  return classifySubstitutionAtCodon(codonBefore, codonAfter, codonIndex)
+}
+
+/** Classifies a single-codon substitution given the codon before/after and its 0-based codon index within the CDS. */
+function classifySubstitutionAtCodon(
+  codonBefore: string,
+  codonAfter: string,
+  codonIndex: number,
+): ProteinEffect {
   const aminoAcidBefore = translateCodon(codonBefore)
   const aminoAcidAfter = translateCodon(codonAfter)
   const aminoAcidPosition = codonIndex + 1
@@ -217,6 +232,64 @@ export function applyMutation(construct: Construct, input: MutationInput): Apply
   }
 
   return { construct: newConstruct, mutation }
+}
+
+export type HeatmapBase = 'A' | 'T' | 'G' | 'C'
+const ALL_BASES: HeatmapBase[] = ['A', 'T', 'G', 'C']
+
+export interface MutationHeatmapCell {
+  codonIndex: number
+  positionInCodon: 0 | 1 | 2
+  /** Plus-strand genomic coordinate of this nucleotide (for cross-highlighting). */
+  genomicPosition: number
+  referenceBase: HeatmapBase
+  alternateBase: HeatmapBase
+  effect: ProteinEffect
+}
+
+export interface MutationHeatmapResult {
+  cdsLength: number
+  aminoAcidLength: number
+  cells: MutationHeatmapCell[] // length === cdsLength * 3 (ref-base "row" is never a cell)
+}
+
+/**
+ * All 3 possible single-base substitutions at every position of `cdsFeature`'s reading frame.
+ * Because every substitution is single-base and strictly in-frame, `frameshift`,
+ * `in-frame-indel`, and `noncoding` can never appear in `cells` — only `synonymous`,
+ * `missense`, `nonsense`, `start-loss` (codonIndex 0 only), and `stop-loss` (last codon only).
+ */
+export function computeMutationHeatmap(
+  cdsFeature: Feature,
+  sequence: string,
+): MutationHeatmapResult {
+  const codons = translateFeature(cdsFeature, sequence) // O(N), already exists/tested
+  const bases = readingBasesWithCoords(cdsFeature, sequence) // O(N)
+  const cells: MutationHeatmapCell[] = []
+
+  codons.forEach((codon, codonIndex) => {
+    for (let p = 0; p < 3; p++) {
+      const baseInfo = bases[codonIndex * 3 + p]
+      if (!baseInfo) continue
+      const referenceBase = baseInfo.base.toUpperCase() as HeatmapBase
+      for (const alternateBase of ALL_BASES) {
+        if (alternateBase === referenceBase) continue
+        const mutatedCodon = codon.seq.slice(0, p) + alternateBase + codon.seq.slice(p + 1)
+        const effect = classifySubstitutionAtCodon(codon.seq, mutatedCodon, codonIndex)
+        cells.push({
+          codonIndex,
+          positionInCodon: p as 0 | 1 | 2,
+          genomicPosition: baseInfo.pos,
+          referenceBase,
+          alternateBase,
+          effect,
+        })
+      }
+    }
+  })
+
+  const aminoAcidLength = codons.filter((c) => c.aa !== '*').length
+  return { cdsLength: bases.length, aminoAcidLength, cells }
 }
 
 export type { FeatureSegment }

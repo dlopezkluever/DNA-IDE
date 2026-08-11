@@ -172,7 +172,7 @@ interface FeatureLike {
  * piece is walked back-to-front (complementing per base) and the piece order
  * itself is reversed.
  */
-function readingBasesWithCoords(
+export function readingBasesWithCoords(
   feature: FeatureLike,
   seq: string,
 ): { base: string; pos: number }[] {

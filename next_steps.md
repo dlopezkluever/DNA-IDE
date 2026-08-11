@@ -82,7 +82,7 @@ something bigger than a plasmid (e.g. a viral genome or a bacterial operon clust
 
 Bigger than Tier 1, but each one reuses at least one existing module heavily and stays 100%
 client-side, consistent with the current architecture.
-
+ please make a detailed spec and implementation  plan markdown doc  to build the following feature into our application:"""
 ### CRISPR guide RNA designer ⭐⭐ — the biggest genuine gap in the toolkit
 
 Your idea #1, and worth calling out specifically: the PRD explicitly listed "CRISPR guide
@@ -116,10 +116,10 @@ works*. Concretely, a new **CRISPR** tab would:
    Restriction.
 
 This is a genuinely great fit for the codebase: same shape of problem as restriction-site
-finding (motif scanning + scoring + visualization), extends the existing UI vocabulary instead
-of inventing a new one, and closes the single most obvious conceptual gap between "DNA IDE"
+finding (motif scanning + scoring + visualizatio, extends the existing UI vocabulary instead
+of inventing a new one, and closes the single mosn)t obvious conceptual gap between "DNA IDE"
 and "genetic engineering IDE."
-
+"""
 ### Protein structure viewer + mutation mapping ⭐
 
 Your idea #3, scoped down to something buildable client-side: pick one well-characterized

@@ -2,18 +2,8 @@ import { useConstructStore } from '../../store/constructStore'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
 import { toDisplayPosition } from '../../biology/sequence'
 import { consequenceLabel, formatDNAChange, formatProteinChange } from '../../utils/format'
+import { CONSEQUENCE_TEXT_CLASS } from '../../utils/consequenceColors'
 import type { Mutation } from '../../types/models'
-
-const CONSEQUENCE_COLOR: Record<string, string> = {
-  synonymous: 'text-(--color-text-secondary)',
-  missense: 'text-(--color-warn)',
-  nonsense: 'text-(--color-danger)',
-  frameshift: 'text-(--color-danger)',
-  noncoding: 'text-(--color-text-muted)',
-  'start-loss': 'text-(--color-danger)',
-  'stop-loss': 'text-(--color-danger)',
-  'in-frame-indel': 'text-(--color-warn)',
-}
 
 function MutationDetail({
   mutation,
@@ -56,7 +46,7 @@ function MutationDetail({
       {effect && (
         <div>
           Type:{' '}
-          <span className={CONSEQUENCE_COLOR[effect.consequence] ?? 'text-(--color-text-primary)'}>
+          <span className={CONSEQUENCE_TEXT_CLASS[effect.consequence] ?? 'text-(--color-text-primary)'}>
             {consequenceLabel(effect.consequence)}
           </span>
         </div>
@@ -109,7 +99,7 @@ export function MutationList() {
                 {formatDNAChange(m)}
               </span>
               {m.proteinEffect && (
-                <span className={CONSEQUENCE_COLOR[m.proteinEffect.consequence] ?? ''}>
+                <span className={CONSEQUENCE_TEXT_CLASS[m.proteinEffect.consequence] ?? ''}>
                   {consequenceLabel(m.proteinEffect.consequence)}
                 </span>
               )}

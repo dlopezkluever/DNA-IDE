@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useConstructStore } from '../../store/constructStore'
 import { useUIStore } from '../../store/uiStore'
 import { reverseComplement } from '../../biology/sequence'
@@ -29,7 +28,8 @@ export function SequenceToolbar() {
   const searchResults = useUIStore((s) => s.searchResults)
   const setSearchResults = useUIStore((s) => s.setSearchResults)
   const explainMode = useUIStore((s) => s.explainMode)
-  const [showRC, setShowRC] = useState(false)
+  const showRC = useUIStore((s) => s.rcPreviewOpen)
+  const setShowRC = useUIStore((s) => s.setRcPreviewOpen)
 
   const construct = activeConstructId ? constructs[activeConstructId] : null
 
@@ -60,7 +60,7 @@ export function SequenceToolbar() {
 
         <button
           type="button"
-          onClick={() => setShowRC((v) => !v)}
+          onClick={() => setShowRC(!showRC)}
           disabled={!selectedSeq}
           className="ml-auto rounded border border-(--color-border-strong) px-2 py-1 font-mono text-xs text-(--color-text-secondary) hover:border-(--color-text-muted) disabled:cursor-not-allowed disabled:opacity-40"
         >
