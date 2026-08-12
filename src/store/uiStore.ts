@@ -4,7 +4,15 @@ import type { Strand } from '../types/models'
 import { RESTRICTION_ENZYMES } from '../data/restrictionEnzymes'
 
 export type ViewId =
-  'sequence' | 'map' | 'protein' | 'mutations' | 'restriction' | 'pcr' | 'compare' | 'assembly'
+  | 'sequence'
+  | 'map'
+  | 'protein'
+  | 'mutations'
+  | 'restriction'
+  | 'pcr'
+  | 'compare'
+  | 'assembly'
+  | 'crispr'
 
 export interface Selection {
   start: number

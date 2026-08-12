@@ -14,6 +14,7 @@ import { RestrictionView } from '../../views/RestrictionView'
 import { PCRView } from '../../views/PCRView'
 import { CompareView } from '../../views/CompareView'
 import { AssemblyView } from '../../views/AssemblyView'
+import { CRISPRView } from '../../views/CRISPRView'
 
 export function Shell() {
   const activeView = useUIStore((s) => s.activeView)
@@ -45,6 +46,7 @@ export function Shell() {
           {activeView === 'pcr' && <PCRView />}
           {activeView === 'compare' && <CompareView />}
           {activeView === 'assembly' && <AssemblyView />}
+          {activeView === 'crispr' && <CRISPRView />}
         </main>
         <Inspector />
       </div>
