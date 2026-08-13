@@ -120,17 +120,27 @@ describe('resolveTargetCDS', () => {
 })
 
 describe('buildCommands', () => {
-  it('always includes the 9 navigate commands and the Explain toggle, even with no construct', () => {
+  it('always includes the 10 navigate commands and the Explain toggle, even with no construct', () => {
     const commands = buildCommands(buildContext())
     const navigate = commands.filter((c) => c.category === 'navigate')
-    expect(navigate).toHaveLength(9)
+    expect(navigate).toHaveLength(10)
     expect(navigate.every((c) => c.enabled)).toBe(true)
     expect(commands.find((c) => c.id === 'toggle-explain-mode')).toBeDefined()
   })
 
-  it('hides Run commands entirely when there is no active construct', () => {
+  it('hides construct-gated Run commands when there is no active construct, but keeps "open-scenarios"', () => {
     const commands = buildCommands(buildContext())
-    expect(commands.some((c) => c.category === 'run')).toBe(false)
+    expect(commands.some((c) => c.id === 'design-crispr-guides')).toBe(false)
+    const openScenarios = commands.find((c) => c.id === 'open-scenarios')!
+    expect(openScenarios.category).toBe('run')
+    expect(openScenarios.enabled).toBe(true)
+  })
+
+  it('"CRISPR scenarios" runs setActiveView("scenarios")', () => {
+    const ctx = buildContext()
+    const openScenarios = buildCommands(ctx).find((c) => c.id === 'open-scenarios')!
+    openScenarios.run()
+    expect(ctx.setActiveView).toHaveBeenCalledWith('scenarios')
   })
 
   it('shows Run commands once a construct is active', () => {

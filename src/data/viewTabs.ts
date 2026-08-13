@@ -10,4 +10,5 @@ export const TABS: { id: ViewId; label: string }[] = [
   { id: 'compare', label: 'Compare' },
   { id: 'assembly', label: 'Assembly' },
   { id: 'crispr', label: 'CRISPR' },
+  { id: 'scenarios', label: 'Scenarios' },
 ]

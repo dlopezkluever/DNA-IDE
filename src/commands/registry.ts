@@ -179,6 +179,15 @@ export function buildCommands(ctx: CommandContext): CommandDef[] {
     })
   }
 
+  // Doesn't require a construct — scenario mode loads its own from EXAMPLE_CONSTRUCTS.
+  commands.push({
+    id: 'open-scenarios',
+    label: 'CRISPR scenarios',
+    category: 'run',
+    enabled: true,
+    run: () => ctx.setActiveView('scenarios'),
+  })
+
   commands.push({
     id: 'toggle-explain-mode',
     label: 'Toggle Explain Mode',
