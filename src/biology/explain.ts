@@ -4,6 +4,8 @@ import { AMINO_ACID_INFO, type CodonInfo } from './translation'
 import { consequenceLabel, aminoAcidFullName } from '../utils/format'
 import type { GuideCandidate, GuideScore } from './crispr'
 import type { PamSystem } from '../data/pamSystems'
+import type { BurialScore, StructureMatch } from './structureMapping'
+import { NEIGHBOR_RADIUS_ANGSTROM } from './structureMapping'
 
 export interface ExplainStep {
   label: string
@@ -78,4 +80,44 @@ export function explainCRISPRGuide(
     },
     { label: 'Off-target matches in this construct', value: String(offTargetCount) },
   ]
+}
+
+/** Same shape as the three explain functions above, applied to a residue in the Structure view. */
+export function explainStructureResidue(
+  constructAAPosition: number,
+  constructAA: string,
+  match: StructureMatch,
+  burial: BurialScore | null,
+): ExplainStep[] {
+  const refResSeq = match.mapping.toReference.get(constructAAPosition)
+  const refResidue =
+    refResSeq !== undefined ? match.structure.residues.find((r) => r.resSeq === refResSeq) : undefined
+  const steps: ExplainStep[] = [
+    {
+      label: 'This construct',
+      value: `${aminoAcidFullName(constructAA)} at position ${constructAAPosition}`,
+    },
+  ]
+  if (refResidue) {
+    steps.push({
+      label: `Reference structure (${match.structure.pdbId})`,
+      value:
+        refResidue.resName === constructAA
+          ? `Same residue (${aminoAcidFullName(refResidue.resName)}) at structure position ${refResidue.resSeq}`
+          : `Different residue here: ${aminoAcidFullName(refResidue.resName)} at structure position ${refResidue.resSeq} — this construct's protein diverges from the crystallized structure at this exact position`,
+    })
+    steps.push({ label: 'Secondary structure', value: refResidue.ss })
+  } else {
+    steps.push({
+      label: `Reference structure (${match.structure.pdbId})`,
+      value: 'No corresponding position — falls outside the aligned region',
+    })
+  }
+  if (burial) {
+    steps.push({
+      label: 'Burial (proxy)',
+      value: `${burial.category} — ${burial.neighborCount} Cα neighbors within ${NEIGHBOR_RADIUS_ANGSTROM}Å`,
+    })
+  }
+  return steps
 }
