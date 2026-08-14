@@ -137,7 +137,7 @@ in a buried structural core behaves completely differently from one on a floppy 
 even if both are technically "missense.") This is the natural bridge to your idea #2 (protein
 engineering workbench) — you don't need a separate app, you need this feature added to the one
 you have.
-
+bn
 ### Sequence alignment / homology tool
 
 `alignment.ts` already implements pairwise sequence alignment (it's what powers the DNA/protein

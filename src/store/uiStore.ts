@@ -14,6 +14,7 @@ export type ViewId =
   | 'assembly'
   | 'crispr'
   | 'scenarios'
+  | 'structure'
 
 export interface Selection {
   start: number

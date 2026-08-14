@@ -120,10 +120,10 @@ describe('resolveTargetCDS', () => {
 })
 
 describe('buildCommands', () => {
-  it('always includes the 10 navigate commands and the Explain toggle, even with no construct', () => {
+  it('always includes the 11 navigate commands and the Explain toggle, even with no construct', () => {
     const commands = buildCommands(buildContext())
     const navigate = commands.filter((c) => c.category === 'navigate')
-    expect(navigate).toHaveLength(10)
+    expect(navigate).toHaveLength(11)
     expect(navigate.every((c) => c.enabled)).toBe(true)
     expect(commands.find((c) => c.id === 'toggle-explain-mode')).toBeDefined()
   })
@@ -157,6 +157,7 @@ describe('buildCommands', () => {
         'compare-with',
         'mutation-heatmap',
         'design-crispr-guides',
+        'view-structure',
       ]),
     )
   })
@@ -244,5 +245,13 @@ describe('buildCommands', () => {
     expect(crispr.enabled).toBe(true)
     crispr.run()
     expect(ctx.setActiveView).toHaveBeenCalledWith('crispr')
+  })
+
+  it('View 3D structure runs setActiveView("structure")', () => {
+    const ctx = buildContext({ activeConstruct: construct() })
+    const structure = buildCommands(ctx).find((c) => c.id === 'view-structure')!
+    expect(structure.enabled).toBe(true)
+    structure.run()
+    expect(ctx.setActiveView).toHaveBeenCalledWith('structure')
   })
 })
