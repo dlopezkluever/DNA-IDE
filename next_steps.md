@@ -120,6 +120,8 @@ finding (motif scanning + scoring + visualizatio, extends the existing UI vocabu
 of inventing a new one, and closes the single mosn)t obvious conceptual gap between "DNA IDE"
 and "genetic engineering IDE."
 """
+
+please make a detailed spec and implementation plan for this feature (put the plan in a markdown file) ->
 ### Protein structure viewer + mutation mapping ⭐
 
 Your idea #3, scoped down to something buildable client-side: pick one well-characterized
@@ -135,7 +137,7 @@ in a buried structural core behaves completely differently from one on a floppy 
 even if both are technically "missense.") This is the natural bridge to your idea #2 (protein
 engineering workbench) — you don't need a separate app, you need this feature added to the one
 you have.
-
+bn
 ### Sequence alignment / homology tool
 
 `alignment.ts` already implements pairwise sequence alignment (it's what powers the DNA/protein

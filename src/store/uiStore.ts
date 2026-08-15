@@ -13,6 +13,8 @@ export type ViewId =
   | 'compare'
   | 'assembly'
   | 'crispr'
+  | 'scenarios'
+  | 'structure'
 
 export interface Selection {
   start: number

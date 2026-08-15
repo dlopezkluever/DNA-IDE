@@ -5,29 +5,11 @@ import { explainCRISPRGuide } from '../../biology/explain'
 import { toDisplayPosition } from '../../biology/sequence'
 import { SPCAS9 } from '../../data/pamSystems'
 import { ExplainBlock } from '../explain/ExplainBlock'
+import { RATING_STYLE, guideSpan } from './guideDisplay'
 import type { ScoredGuide } from '../../views/CRISPRView'
-import type { GuideScore } from '../../biology/crispr'
 import type { Topology } from '../../types/models'
 
 const MISMATCH_OPTIONS = [0, 1, 2] as const
-
-const RATING_STYLE: Record<GuideScore['rating'], { glyph: string; className: string }> = {
-  // strong = accent green: the one case where "good" and the app's one accent color coincide,
-  // matching EnzymeList's unique-cutter badge precedent (DESIGN.md §2.3 — green means
-  // "active/selected right now", so a straight traffic-light red/amber/green mapping is avoided).
-  strong: { glyph: '★', className: 'text-(--color-accent)' },
-  moderate: { glyph: '●', className: 'text-(--color-warn)' },
-  weak: { glyph: '○', className: 'text-(--color-text-muted)' },
-}
-
-function guideSpan(candidate: ScoredGuide['candidate']) {
-  const spanStart = candidate.strand === 1 ? candidate.guideStart : candidate.pamPosition
-  const spanEnd =
-    candidate.strand === 1
-      ? candidate.pamPosition + SPCAS9.pamPattern.length
-      : candidate.guideEnd
-  return { spanStart, spanEnd }
-}
 
 function GuideDetail({
   entry,
@@ -97,14 +79,19 @@ export function GuideList({
   sequence,
   topology,
   explainMode,
+  rowAction,
 }: {
   scored: ScoredGuide[]
   sequence: string
   topology: Topology
   explainMode: boolean
+  /** Additive only — omitted by CRISPRView, so its table renders exactly as before. When
+   * present (ScenarioView, §3.4), each row gets an extra "use this guide" action button. */
+  rowAction?: { label: string; onClick: (entry: ScoredGuide) => void }
 }) {
   const { selectRange } = useCrossHighlight()
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const columnCount = rowAction ? 8 : 7
 
   return (
     <table className="w-full font-mono text-xs">
@@ -117,6 +104,7 @@ export function GuideList({
           <th className="py-1 pr-3">Feature</th>
           <th className="py-1 pr-3">Off-targets</th>
           <th className="py-1">Rating</th>
+          {rowAction && <th className="py-1 pl-3" />}
         </tr>
       </thead>
       <tbody>
@@ -168,10 +156,24 @@ export function GuideList({
                 <td className={`py-1 ${rating.className}`}>
                   {rating.glyph} {score.rating}
                 </td>
+                {rowAction && (
+                  <td className="py-1 pl-3">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        rowAction.onClick(entry)
+                      }}
+                      className="rounded border border-(--color-accent-dim) px-1.5 py-0.5 text-(--color-accent) hover:bg-(--color-bg-hover)"
+                    >
+                      {rowAction.label}
+                    </button>
+                  </td>
+                )}
               </tr>
               {isExpanded && (
                 <tr>
-                  <td colSpan={7} className="p-0">
+                  <td colSpan={columnCount} className="p-0">
                     <GuideDetail
                       entry={entry}
                       sequence={sequence}

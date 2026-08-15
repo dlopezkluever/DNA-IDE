@@ -153,6 +153,14 @@ export function buildCommands(ctx: CommandContext): CommandDef[] {
       run: () => ctx.setActiveView('crispr'),
     })
 
+    commands.push({
+      id: 'view-structure',
+      label: 'View 3D structure',
+      category: 'run',
+      enabled: true,
+      run: () => ctx.setActiveView('structure'),
+    })
+
     const otherConstructs = ctx.constructs.filter((c) => c.id !== construct.id)
     commands.push({
       id: 'compare-with',
@@ -178,6 +186,15 @@ export function buildCommands(ctx: CommandContext): CommandDef[] {
       },
     })
   }
+
+  // Doesn't require a construct — scenario mode loads its own from EXAMPLE_CONSTRUCTS.
+  commands.push({
+    id: 'open-scenarios',
+    label: 'CRISPR scenarios',
+    category: 'run',
+    enabled: true,
+    run: () => ctx.setActiveView('scenarios'),
+  })
 
   commands.push({
     id: 'toggle-explain-mode',

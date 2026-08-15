@@ -3,6 +3,7 @@ import type { Feature } from '../../types/models'
 import { getFeaturePieces } from '../../biology/sequence'
 import { FEATURE_TYPE_COLOR } from '../../data/featureColors'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
+import type { MapMarker } from './mapMarkers'
 
 const SIZE = 420
 const CENTER = SIZE / 2
@@ -26,9 +27,17 @@ interface CircularPlasmidViewProps {
   name: string
   sequenceLength: number
   features: Feature[]
+  /** Additive only — omitted by every existing caller (MapView), so their rendering is
+   * unaffected. ScenarioView (§3.5) passes candidate/objective tick marks here. */
+  markers?: MapMarker[]
 }
 
-export function CircularPlasmidView({ name, sequenceLength, features }: CircularPlasmidViewProps) {
+export function CircularPlasmidView({
+  name,
+  sequenceLength,
+  features,
+  markers = [],
+}: CircularPlasmidViewProps) {
   const { activeFeatureId, selectFeature } = useCrossHighlight()
 
   const angleOf = (pos: number) => (sequenceLength === 0 ? 0 : (pos / sequenceLength) * 360)
@@ -102,6 +111,30 @@ export function CircularPlasmidView({ name, sequenceLength, features }: Circular
         >
           {sequenceLength.toLocaleString()} bp
         </text>
+
+        {/* markers (e.g. scenario-mode CRISPR candidates + objective feature, §3.5) */}
+        {markers.map((marker, i) => {
+          const angle = angleOf(marker.position)
+          const inner = polarToCartesian(FEATURE_RADIUS + 8, angle)
+          const outer = polarToCartesian(FEATURE_RADIUS + 14, angle)
+          return (
+            <g
+              key={i}
+              onClick={marker.onClick}
+              className={marker.onClick ? 'cursor-pointer' : undefined}
+            >
+              <line
+                x1={inner.x}
+                y1={inner.y}
+                x2={outer.x}
+                y2={outer.y}
+                stroke={marker.color}
+                strokeWidth={2}
+              />
+              <title>{marker.label}</title>
+            </g>
+          )
+        })}
 
         {features.map((feature) => {
           const pieces = getFeaturePieces(feature, sequenceLength)

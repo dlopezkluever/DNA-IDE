@@ -3,6 +3,7 @@ import type { Feature } from '../../types/models'
 import { toDisplayPosition, getFeaturePieces } from '../../biology/sequence'
 import { useCrossHighlight } from '../../hooks/useCrossHighlight'
 import { FEATURE_TYPE_COLOR } from '../../data/featureColors'
+import type { MapMarker } from './mapMarkers'
 
 const VIEW_WIDTH = 1000
 const RULER_HEIGHT = 24
@@ -44,9 +45,12 @@ function niceStep(range: number, targetTicks = 10): number {
 interface LinearFeatureMapProps {
   sequenceLength: number
   features: Feature[]
+  /** Additive only — omitted by every existing caller (MapView), so their rendering is
+   * unaffected. ScenarioView (§3.5) passes candidate/objective tick marks here. */
+  markers?: MapMarker[]
 }
 
-export function LinearFeatureMap({ sequenceLength, features }: LinearFeatureMapProps) {
+export function LinearFeatureMap({ sequenceLength, features, markers = [] }: LinearFeatureMapProps) {
   const { activeFeatureId, selectFeature } = useCrossHighlight()
 
   const laneOf = useMemo(() => assignLanes(features, sequenceLength), [features, sequenceLength])
@@ -98,6 +102,28 @@ export function LinearFeatureMap({ sequenceLength, features }: LinearFeatureMapP
             </text>
           </g>
         ))}
+
+        {/* markers (e.g. scenario-mode CRISPR candidates + objective feature, §3.5) */}
+        {markers.map((marker, i) => {
+          const x = xOf(marker.position)
+          return (
+            <g
+              key={i}
+              onClick={marker.onClick}
+              className={marker.onClick ? 'cursor-pointer' : undefined}
+            >
+              <line
+                x1={x}
+                y1={RULER_HEIGHT - 14}
+                x2={x}
+                y2={RULER_HEIGHT - 6}
+                stroke={marker.color}
+                strokeWidth={2}
+              />
+              <title>{marker.label}</title>
+            </g>
+          )
+        })}
 
         {/* features */}
         {features.map((feature) => {
