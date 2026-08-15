@@ -145,6 +145,14 @@ export function buildCommands(ctx: CommandContext): CommandDef[] {
       run: () => ctx.setActiveView('restriction'),
     })
 
+    commands.push({
+      id: 'design-crispr-guides',
+      label: 'Design CRISPR guides',
+      category: 'run',
+      enabled: true,
+      run: () => ctx.setActiveView('crispr'),
+    })
+
     const otherConstructs = ctx.constructs.filter((c) => c.id !== construct.id)
     commands.push({
       id: 'compare-with',

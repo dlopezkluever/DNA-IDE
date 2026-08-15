@@ -120,10 +120,10 @@ describe('resolveTargetCDS', () => {
 })
 
 describe('buildCommands', () => {
-  it('always includes the 8 navigate commands and the Explain toggle, even with no construct', () => {
+  it('always includes the 9 navigate commands and the Explain toggle, even with no construct', () => {
     const commands = buildCommands(buildContext())
     const navigate = commands.filter((c) => c.category === 'navigate')
-    expect(navigate).toHaveLength(8)
+    expect(navigate).toHaveLength(9)
     expect(navigate.every((c) => c.enabled)).toBe(true)
     expect(commands.find((c) => c.id === 'toggle-explain-mode')).toBeDefined()
   })
@@ -146,6 +146,7 @@ describe('buildCommands', () => {
         'show-restriction-sites',
         'compare-with',
         'mutation-heatmap',
+        'design-crispr-guides',
       ]),
     )
   })
@@ -225,5 +226,13 @@ describe('buildCommands', () => {
     heatmap.run()
     expect(ctx.setActiveView).toHaveBeenCalledWith('mutations')
     expect(ctx.setMutationHeatmapOpen).toHaveBeenCalledWith(true)
+  })
+
+  it('Design CRISPR guides runs setActiveView("crispr")', () => {
+    const ctx = buildContext({ activeConstruct: construct() })
+    const crispr = buildCommands(ctx).find((c) => c.id === 'design-crispr-guides')!
+    expect(crispr.enabled).toBe(true)
+    crispr.run()
+    expect(ctx.setActiveView).toHaveBeenCalledWith('crispr')
   })
 })

@@ -1,7 +1,9 @@
 import type { Mutation } from '../types/models'
-import { complement, reverseComplement } from './sequence'
+import { complement, reverseComplement, toDisplayPosition } from './sequence'
 import { AMINO_ACID_INFO, type CodonInfo } from './translation'
 import { consequenceLabel, aminoAcidFullName } from '../utils/format'
+import type { GuideCandidate, GuideScore } from './crispr'
+import type { PamSystem } from '../data/pamSystems'
 
 export interface ExplainStep {
   label: string
@@ -54,4 +56,26 @@ export function explainMutation(mutation: Mutation): ExplainStep[] {
   }
   steps.push({ label: 'Result', value: effect ? consequenceLabel(effect.consequence) : 'Applied' })
   return steps
+}
+
+/** Same shape as the three explain functions above, applied to a CRISPR guide candidate. */
+export function explainCRISPRGuide(
+  candidate: GuideCandidate,
+  score: GuideScore,
+  pamSystem: PamSystem,
+  offTargetCount: number,
+): ExplainStep[] {
+  return [
+    {
+      label: 'PAM',
+      value: `${candidate.pamSequence} at position ${toDisplayPosition(candidate.pamPosition)} (${candidate.strand === 1 ? '+' : '-'} strand)`,
+    },
+    { label: 'Protospacer (guide RNA)', value: `5' ${candidate.guideSequence} 3'` },
+    { label: 'Predicted cut site', value: `${pamSystem.cutOffsetFromPAM}bp upstream of the PAM, blunt` },
+    {
+      label: 'GC content',
+      value: `${score.gcContent.toFixed(0)}% ${score.gcFavorable ? '(favorable range)' : '(outside 40-60% favorable range)'}`,
+    },
+    { label: 'Off-target matches in this construct', value: String(offTargetCount) },
+  ]
 }
